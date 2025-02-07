@@ -1,8 +1,11 @@
+# File: views.py
+# Author: Kenneth Tong (ktong22@bu.edu), 2/7/2025
+# Description: My first program to quote Dr. Seuss
+# For the View Application
+
 import random
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
-
-import time
 
 quotes = ["A book is just like life and anything can change.", "Today you are You, that is truer than true. There is no one alive who is Youer than You.", "Kid, you'll move mountains.", "It's not about what it is, it's about what it can become."]
 
@@ -22,7 +25,7 @@ def home_page(request):
 
     return render(request, template, context)
 
-def quote(request):
+def quote(request): #generate a new quote
     template = 'quotes/home.html'
 
     context = {
@@ -32,19 +35,15 @@ def quote(request):
 
     return render(request, template, context)
 
-def about(request):
-    '''Define a view to show the 'about.html' template.'''
-
-    # the template to which we will delegate the work
+def about(request): #about section for this website
     template = 'quotes/about.html'
 
     return render(request, template)
 
-def showAll(request):
-    
+def showAll(request): #all the quotes and pictures
     template = 'quotes/showall.html'
 
-    # a dict of key/value pairs, to be available for use in template
+    # all the possible quotes and pictures
     context = {
         'quote1':quotes[0],
         'quote2':quotes[1],
