@@ -1,0 +1,33 @@
+{% extends 'quotes/base.html' %}
+
+{% block content %}
+<div>
+<center>
+    <table>
+        <tr>
+            <th>Quotes</th>
+            <th>Pictures</th>
+        </tr>
+        <tr>
+            <td>{{quote1}}</td>
+            <td>
+                <img src={{image1}} alt="Dr. Seuss Photo 1">
+            </td>
+        </tr>
+        <tr>
+            <td>{{quote2}}</td>
+            <td>
+                <img src={{image2}} alt="Dr. Seuss Photo 2">
+            </td>
+        </tr>
+        <tr>
+            <td>{{quote3}}</td>     
+            <td>
+                <img src={{image3}} alt="Dr. Seuss Photo 3">
+            </td>
+        </tr>
+    </table>
+</center>
+</div>
+
+{% endblock %}
