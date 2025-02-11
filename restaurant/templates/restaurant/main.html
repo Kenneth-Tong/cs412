@@ -1,0 +1,74 @@
+<!-- restaurant/templates/restaurant/home.html -->
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+<div>
+    <center>
+        <h1>Coding Cafe</h1>
+        <img src="https://cs-people.bu.edu/ktong22/Restaurant/restaurant.jpg" alt="restaurant">
+    </center>
+
+    <!-- About us -->
+    <h2>Welcome to Coding Cafe!</h2>
+    <p>We are an cody, open-door, and bug-free coding cafe open to all coders!</p>
+    
+    <!-- Location -->
+    <h2> Location</h2>
+    <p>123 Algorithm Avenue<br>
+        Suite #404 (No errors here!)<br>
+        Loopsville, MA 00000</p>
+
+    <!-- Hours of Operation -->
+    <div class="section">
+        <h2> Hours of Operation</h2>
+        <center>
+            <table>
+                <tr>
+                    <tr>
+                        <th>Day</th>
+                        <th>Hours</th>
+                    </tr>
+                    <tr>
+                        <td>Monday</td>
+                        <td>8:00 AM - 8:00 PM</td>
+                    </tr>
+                    <tr>
+                        <td>Tuesday</td>
+                        <td>8:00 AM - 8:00 PM</td>
+                    </tr>
+                    <tr>
+                        <td>Wednesday</td>
+                        <td>8:00 AM - 8:00 PM</td>
+                    </tr>
+                    <tr>
+                        <td>Thursday</td>
+                        <td>8:00 AM - 8:00 PM</td>
+                    </tr>
+                    <tr>
+                        <td>Friday</td>
+                        <td>8:00 AM - 10:00 PM</td>
+                    </tr>
+                    <tr>
+                        <td>Saturday</td>
+                        <td>9:00 AM - 10:00 PM</td>
+                    </tr>
+                    <tr>
+                        <td>Sunday</td>
+                        <td>9:00 AM - 6:00 PM</td>
+                    </tr>
+                </tr>
+                <tr>
+                    <th colspan="4">(We’re closed on Stack Overflow Holidays!)</th>
+                </tr>
+            </table>
+        </center>
+    </div>
+
+    <!-- About Us More -->
+    <h2> About Us</h2>
+    <p>At the Coding Cafe, we combine two of life’s greatest pleasures: coding and food! Whether you're debugging your latest project or just need a break from your IDE, we’ve got you covered.</p>
+    <p>Our menu is packed with programming puns and delicious treats. From our Byte-Sized Bagels to our Recursive Risotto Special, every dish is designed to fuel your brain.</p>
+    <p>So grab your laptop, pull up a chair, and join us for a cup of coffee!</p>
+
+</div>
+{% endblock %}

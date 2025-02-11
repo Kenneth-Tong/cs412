@@ -1,0 +1,68 @@
+<!-- restaurant/templates/restaurant/order.html -->
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+<div>
+    <h1>Order from Coding Cafe</h1>
+    <p>Place your order below and we'll get it ready for you!</p>
+
+    <form action="{% url 'submit' %}" method="POST">
+        {% csrf_token %}
+
+        <!-- Customer Information -->
+        <h2>Customer Information</h2>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <h2>Menu Items</h2>
+
+        <!-- Daily Special (Dynamic) -->
+        <h3>Daily Special: {{daily_special.name}}</h3>
+        <p>{{daily_special.description}}</p>
+        <p>Price: {{daily_special.price}}</p>
+        <input type="checkbox" id="daily_special" name="daily_special" value="{{daily_special.name}}">
+        <label for="daily_special">Add to Order</label><br><br>
+
+        <!-- Byte-Sized Bagel -->
+        <h3>Byte-Sized Bagel</h3>
+        <p>A mini bagel with cream cheese, served with a side of "bits" (fruit pieces).</p>
+        <p><strong>Price: $5.99</strong></p>
+        <input type="checkbox" id="byte_bagel" name="byte_bagel" value="Byte-Sized Bagel">
+        <label for="byte_bagel">Add to Order</label><br><br>
+
+        <!-- Infinite Loop Linguine -->
+        <h3>Infinite Loop Linguine</h3>
+        <p>Spiral pasta with marinara sauce that’s so good, you’ll want to eat it forever.</p>
+        <p><strong>Price: $12.99</strong></p>
+        <input type="checkbox" id="linguine" name="linguine" value="Infinite Loop Linguine">
+        <label for="linguine">Add to Order</label><br><br>
+
+        <!-- Pizza Pi -->
+        <h3>Pizza Pi</h3>
+        <p>A personal pizza cut into 3.14 slices (or as close as we can get).</p>
+        <p><strong>Price: $10.99</strong></p>
+        <input type="checkbox" id="pizza" name="pizza" value="Pizza Pi">
+        <label for="pizza">Add to Order</label><br>
+        <p>Toppings (extra $1.50 each):</p>
+        <input type="checkbox" id="pepperoni" name="toppings" value="Pepperoni">
+        <label for="pepperoni">Pepperoni</label><br>
+        <input type="checkbox" id="mushrooms" name="toppings" value="Mushrooms">
+        <label for="mushrooms">Mushrooms</label><br>
+        <input type="checkbox" id="olives" name="toppings" value="Olives">
+        <label for="olives">Olives</label><br><br>
+
+        <!-- Special Instructions -->
+        <h2>Special Instructions</h2>
+        <label for="instructions">Any special requests or dietary restrictions?</label><br>
+        <textarea id="instructions" name="instructions" rows="4" cols="50"></textarea><br><br>
+
+        <input type="submit" value="Place Order">
+    </form>
+</div>
+{% endblock %}

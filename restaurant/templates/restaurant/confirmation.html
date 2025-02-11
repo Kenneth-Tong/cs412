@@ -1,0 +1,37 @@
+<!-- restaurant/templates/restaurant/confirmation.html -->
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+<div class="confirmation-container">
+    <h1 class="confirmation-title">Order Confirmation</h1>
+    <p class="confirmation-message">Thank you for your order, {{name}}! We’re encoding your order to your liking.</p>
+
+    <!-- Customer Information -->
+    <div class="customer-info">
+        <h2>Your Information</h2>
+        <p>Name: {{name}}</p>
+        <p>Phone: {{phone}}</p>
+        <p>Email: {{email}}</p>
+    </div>
+
+    <!-- Order Details -->
+    <h2>Your Order</h2>
+    <p>{{selected_items}}</p>
+    <p>Cost: {{cost}}</p>
+
+    <!-- Special Instructions -->
+    <h2>Special Instructions</h2>
+    <p>{{instructions}}</p>
+
+    <!-- Ready Time -->
+    <div class="ready-time">
+        <h2>Your order will be ready at:</h2>
+        <p class="ready-time-display">{{readytime}}</p>
+    </div>
+
+    <!-- Thank You Message -->
+    <div class="thank-you">
+        <p>We appreciate your business! See you soon at Coding Cafe!</p>
+    </div>
+</div>
+{% endblock %}

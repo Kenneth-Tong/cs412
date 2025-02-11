@@ -28,7 +28,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['cs-webapps.bu.edu', '*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hw',
     'quotes',
+    'formdata',
+    'restaurant',
 ]
 
 MIDDLEWARE = [
