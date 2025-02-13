@@ -28,6 +28,8 @@
         <p>Price: {{daily_special.price}}</p>
         <input type="checkbox" id="daily_special" name="daily_special" value="{{daily_special.name}}">
         <label for="daily_special">Add to Order</label><br><br>
+        <input type="hidden" name="daily_special_name" value="{{daily_special.name}}">
+        <input type="hidden" name="daily_special_price" value="{{daily_special.price}}">
 
         <!-- Byte-Sized Bagel -->
         <h3>Byte-Sized Bagel</h3>

@@ -15,8 +15,6 @@ daily_special = [
     {"name": "Cloud Cupcake", "description": "A fluffy cupcake topped with whipped cream and sprinkles.", "price": "4.99"},
 ]
 
-choosen = -1 # Will re-set when new daily_special choosen
-
 def home(request):
     '''Render the home page.'''
     template_name = "restaurant/main.html"
@@ -69,8 +67,8 @@ def submit(request: HttpRequest):
         # Get selected menu items
         selected_items = ""
         if request.POST.get('daily_special'):
-            selected_items = selected_items + ', ' + daily_special[choosen]['name']
-            cost += float(daily_special[choosen]['price'])
+            selected_items = selected_items + ', ' + request.POST.get('daily_special_name')
+            cost += float(request.POST.get('daily_special_price'))
         if request.POST.get('byte_bagel'):
             selected_items = selected_items + ', ' + 'Byte-Sized Bagel'
             cost += 5.99
