@@ -1,27 +1,23 @@
-<!-- templates/show_all.html -->
-
-{% extends 'blog/base.html' %}
-<h1>Showing all Articles</h1>
-<!-- scriptlet code to display the value of the variable `articles` 
-{{ articles }}
--->
-{% block content %}
-<main class="grid-container">
-    {% for a in articles %}
-    <article>
-        {% if a.image_url %}
-		<img src="{{a.image_url}}" alt="{{a.image_url}}">
-        {% endif %}
-        
-        <div>
-        <h2>{{a.title}}</h2>
-        <strong>by {{a.author}} at {{a.published}}</strong>
-        <p>
-        {{a.text}}
-        </p>
-        </div>
-    </article>
-
-    {% endfor %}
-</main>
-{% endblock %}
+<!-- blog/templates/blog/base.html -->
+{% load static %}
+<html>
+    <head>
+        <title>Blog</title>
+        <link rel="stylesheet" href="{% static 'styles-blog.css' %}">
+    </head>
+    <body>
+        <header>
+            <h1>Blog</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'show_all' %}">Show All</a></li>
+                    <li><a href="{% url 'random' %}">Random</a></li>
+                </ul>
+            </nav>
+        </header>
+    
+    {% block content %}
+    {% endblock %}    
+  
+    </body>
+</html>

@@ -22,4 +22,5 @@ urlpatterns = [
     path("formdata/", include("formdata.urls")),
 	path('hw/', include('hw.urls')), 
     path('blog/', include('blog.urls')), # include the URLs from our blog project's urls.py file
+    path('mini_fb/', include('mini_fb.urls')),
 ]
