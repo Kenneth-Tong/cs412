@@ -20,7 +20,8 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls), # built-in django admin application
     path("formdata/", include("formdata.urls")),
-	path('hw/', include('hw.urls')), 
+	path('hw/', include('hw.urls')),
+    path('restaurant/', include('restaurant.urls')), 
     path('blog/', include('blog.urls')), # include the URLs from our blog project's urls.py file
     path('mini_fb/', include('mini_fb.urls')),
 ]
