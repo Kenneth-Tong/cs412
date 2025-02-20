@@ -11,17 +11,16 @@
     <article>
         <tr> <!-- Create a column for pictures and column for descriptions -->
             <td>
-            {% if p.profile_image_url %}
+            {% if p.profile_image_url %} <!-- If there is an image assocaited with the Profile, display it as a clickable link -->
                 <a href="{% url 'show_profile' p.pk %}">
                 <img src="{{p.profile_image_url}}" alt="{{profile.profile_image_url}}">
                 </a>
             {% endif %}
             </td>
             <td>
-                <div>
+                <div> <!-- Access the person in the for looping through the list of Profiles -->
                     <h2>{{p.first_name}} {{p.last_name}}</h2>
                     <h3>Born in: {{p.city}}</h3>
-                    <p>Best reached at: {{p.email_address}}</p>
                 </div>
             </td>
         </tr>

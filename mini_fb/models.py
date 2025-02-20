@@ -6,7 +6,7 @@ from django.db import models
 
 class Profile(models.Model):
     # Data attributes of a profile: most are text fields
-    first_name = models.TextField(blank=False)
+    first_name = models.TextField(blank=False) # Seperated first and last names, but will be combined when accessing them for webpages!
     last_name = models.TextField(blank=False)
     city = models.TextField(blank=False)
     email_address = models.TextField(blank=False)
