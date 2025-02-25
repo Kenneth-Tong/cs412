@@ -2,6 +2,10 @@
 {% extends 'mini_fb/base.html' %}
 
 {% block content %}
+<ul> <!-- Link to create status update -->
+    <li><a href="{% url 'create_status' profile.pk %}">Create Status Update</a></li>
+</ul>
+
 <main class="grid-container">
     
     <article class="featured">
@@ -14,6 +18,15 @@
             <h3>Born in: {{profile.city}}</h3>
             <p>Best reached at: {{profile.email_address}}</p>    
         </div>
+        <h2>Recent Status Post</h2>
+        {% for message in profile.get_status_messages %}
+            <div>
+                <strong>At {{message.timestamp}}</strong>
+                <p>
+                    {{message.message}}
+                </p>
+            </div>
+        {% endfor %}
     </article>
 
 </main>
