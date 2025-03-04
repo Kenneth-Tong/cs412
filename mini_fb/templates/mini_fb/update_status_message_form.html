@@ -1,0 +1,21 @@
+<!-- mini_fb/update_status_message_form.html -->
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<h1>Update {{status_message.profile.first_name}} {{status_message.profile.last_name}}'s Status Message</h1>
+<p>{{status_message}}</p>
+
+<!-- display the HTML form -->
+<form action="{% url 'update_status_message' status_message.pk %}" method="POST">
+    {% csrf_token %}
+    <table>
+    {{form.as_table}}
+    </table>
+
+    <input type="submit" name="submit" value="Submit">
+</form>
+<form action="{% url 'show_profile' status_message.profile.pk %}" method="GET">
+    <input type="submit" value="Cancel">
+</form>
+
+{% endblock %}

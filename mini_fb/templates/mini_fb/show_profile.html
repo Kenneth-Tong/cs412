@@ -9,8 +9,8 @@
 <main class="grid-container">
     
     <article class="featured">
-        {% if profile.profile_image_url %} <!-- If there is a picture associated with the person, add it to the webpage -->
-		    <img src="{{profile.profile_image_url}}" alt="{{profile.profile_image_url}}">
+        {% if profile.image_url %} <!-- If there is a picture associated with the person, add it to the webpage -->
+		    <img src="{{profile.image_url}}" alt="{{profile.image_url}}">
 		{% endif %}
         
         <div>
@@ -24,6 +24,13 @@
                 <strong>At {{message.timestamp}}</strong>
                 <p>
                     {{message.message}}
+                    <br>
+                    {% for img in message.get_images %}
+                        <br>    
+                        <img src='{{img.image_file.url}}' alt='{{img.image_file.url}}'>
+                    {% endfor %} 
+                    <li><a href="{% url 'update_status_message' message.pk %}">Update Status Message</a></li>
+                    <li><a href="{% url 'delete_status_message' message.pk %}">Delete Status Message</a></li>
                 </p>
             </div>
         {% endfor %}

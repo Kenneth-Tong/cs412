@@ -21,4 +21,14 @@ class CreateStatusMessageForm(forms.ModelForm):
     class Meta:
         '''associate this form with the Message model; select fields'''
         model = StatusMessage
-        fields = ['message']  # which fields from model should we use
+        fields = ['message']  # Which fields from model should we use
+
+class UpdateProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        exclude = ['first_name', 'last_name',] # Everything except name
+
+class UpdateStatusMessageForm(forms.ModelForm):
+    class Meta:
+        model = StatusMessage
+        exclude = ['profile'] # Cannot edit the profile who said it!

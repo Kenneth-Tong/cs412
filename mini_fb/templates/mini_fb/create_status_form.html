@@ -2,12 +2,9 @@
 {% extends 'mini_fb/base.html' %}
 
 {% block content %}
-<h2>You are adding a status update for {{profile.first_name}} {{profile.last_name}}!</h2>
+<h2>You are adding a status update for {{profile.first_name}} {{profile.last_name}}</h2>
 
-<form method = 'POST'>
-<!-- talk about CSRF -->
-{% csrf_token %}
-
+<form method = 'POST' enctype="multipart/form-data">
 <!-- customized table version here -->
 
 {% csrf_token %}
@@ -19,7 +16,9 @@
     </tr>
     {% endfor %}
     <tr>
-        <td></td>
+        <td>
+            <input type="file" name = "files" multiple />
+        </td>
         <td>
             <input type='submit' name = 'Add Status Update!' value= 'Add Status Update!'>
         </td>
