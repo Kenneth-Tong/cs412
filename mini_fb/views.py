@@ -88,8 +88,8 @@ class UpdateProfileView(UpdateView):
     form_class = UpdateProfileForm
     template_name = "mini_fb/update_profile_form.html"
 
-class DeleteStatusMessageView(DeleteView):
-    '''A view to delete a comment and remove it from the database.'''
+class DeleteStatusMessageView(DeleteView): # Delete a status message
+    '''A view to delete a message and remove it from the database.'''
 
     template_name = "mini_fb/delete_status_form.html"
     model = StatusMessage
@@ -108,7 +108,7 @@ class DeleteStatusMessageView(DeleteView):
         # reverse to show the profile page
         return reverse('show_profile', kwargs={'pk':profile.pk})
 
-class UpdateStatusMessageView(UpdateView):
+class UpdateStatusMessageView(UpdateView): # Update a status message on someone's profile
     model = StatusMessage
     form_class = UpdateStatusMessageForm
     template_name = "mini_fb/update_status_message_form.html"
