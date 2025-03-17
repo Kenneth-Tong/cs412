@@ -2,8 +2,12 @@
 {% extends 'mini_fb/base.html' %}
 
 {% block content %}
-<ul> <!-- Link to create status update -->
+<ul> <!-- Link to update profile -->
+    <li><a href="{% url 'update_profile' profile.pk %}">Update Profile</a></li>
+ <!-- Link to create status update -->
     <li><a href="{% url 'create_status' profile.pk %}">Create Status Update</a></li>
+<!-- Link to news feed -->
+    <li><a href="{% url 'news_feed' profile.pk %}">View News Feed</a></li>
 </ul>
 
 <main class="grid-container">
@@ -21,20 +25,49 @@
         <h2>Recent Status Post</h2>
         {% for message in profile.get_status_messages %}
             <div>
-                <strong>At {{message.timestamp}}</strong>
+                <small>At {{message.timestamp}}</small>
                 <p>
                     {{message.message}}
                     <br>
-                    {% for img in message.get_images %}
-                        <br>    
-                        <img src='{{img.image_file.url}}' alt='{{img.image_file.url}}'>
-                    {% endfor %} 
+                    {% if message.get_images %}
+                        <table>
+                            <tr class="invisible">
+                            {% for img in message.get_images %}
+                                <br>    
+                                <td class="invisible"><img src='{{img.image_file.url}}' alt='{{img.image_file.url}}'></td>
+                            {% endfor %} 
+                            </tr>
+                        </table>
+                    {% endif %}
                     <li><a href="{% url 'update_status_message' message.pk %}">Update Status Message</a></li>
                     <li><a href="{% url 'delete_status_message' message.pk %}">Delete Status Message</a></li>
                 </p>
             </div>
+            <hr>
         {% endfor %}
+        <h2>{{profile.first_name}} {{profile.last_name}}'s friends</h2>
+        {% with profile.get_friends as friends %} <!-- Store the value of friends for the if statement -->
+            {% if friends %}
+                <table class="invisible">
+                    <tr>
+                        {% for friend_profile in friends %}
+                            {% if friend_profile.image_url %}
+                                <td class="invisible"><img src="{{ friend_profile.image_url }}" alt="{{ friend_profile.image_url }}"
+                                    width="474"
+                                    height="355"></td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                    <tr class="invisible">
+                        {% for friend_profile in friends %}
+                            <td class="invisible">{{ friend_profile.first_name }} {{ friend_profile.last_name }}</td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            {% endif %}
+        {% endwith %}
+        <br>
+        <a href="{% url 'friend_suggestions' profile.pk %}">See Friend Suggestions</a>
     </article>
-
 </main>
 {% endblock %}

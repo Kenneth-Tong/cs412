@@ -22,6 +22,72 @@ class Profile(models.Model):
         '''Return the URL to display one instance of this model.'''
         return reverse('show_profile', kwargs={'pk':self.pk}) # Looking at URLS to redirect user to profile they created
     
+    def get_friends(self):
+        friends_as_profile1 = Friend.objects.filter(profile1=self) # If profile 1 is this person's profile
+        friends_as_profile2 = Friend.objects.filter(profile2=self)
+        friends = []  # List of friends
+
+        # Add profile2 when self is profile1
+        for friend in friends_as_profile1:
+            if friend.profile2 != self:  
+                friends.append(friend.profile2)
+            
+        # Add profile1 when self is profile2
+        for friend in friends_as_profile2:
+            if friend.profile1 != self:
+                friends.append(friend.profile1)
+        return friends
+
+    def add_friend(self, other):
+        # Prevent self-friending
+        if self == other:
+            return
+
+        # Check if the friendship already exists (either direction)
+        if Friend.objects.filter(profile1=self, profile2=other).exists() or Friend.objects.filter(profile1=other, profile2=self).exists():
+            return
+
+        # Create new Friend relationship
+        Friend.objects.create(profile1=self, profile2=other)
+        return
+    
+    def get_friend_suggestions(self):
+        all_profiles = Profile.objects.exclude(pk=self.pk) # All but this profile
+        current_friends = self.get_friends() # Make sure not to include friends already there
+        profile = []
+
+        for friend in all_profiles:
+            if not friend in current_friends:
+                profile.append(friend)
+        return profile
+    
+    def get_news_feed(self):
+        message_list = []
+
+        # Add this profile's messages
+        for message in self.get_status_messages():
+            inserted = False
+            for i in range(len(message_list)):
+                if message.timestamp > message_list[i].timestamp:
+                    message_list.insert(i, message)
+                    inserted = True
+                    break
+            if not inserted:
+                message_list.append(message)
+
+        # Add friends' messages in order
+        for friend in self.get_friends():
+            for message in friend.get_status_messages():
+                inserted = False
+                for i in range(len(message_list)):
+                    if message.timestamp > message_list[i].timestamp:
+                        message_list.insert(i, message)
+                        inserted = True
+                        break
+                if not inserted:
+                    message_list.append(message)
+        return message_list
+
     def __str__(self):
         '''Return a string representation of this Article object.'''
         return f'{self.first_name} {self.last_name}'
@@ -58,3 +124,11 @@ class StatusImage(models.Model): # Ways to find images that relate to a status m
 
     def __str__(self):
         return f'StatusImage(StatusMessage={self.status_message.pk}, Image={self.image.pk})'
+
+class Friend(models.Model): # Friends connecting two nodes in a network
+    profile1 = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="profile1")
+    profile2 = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="profile2")
+    timestamp = models.DateTimeField(auto_now=True) # Time friendship made
+
+    def __str__(self):
+        return f'{self.profile1} & {self.profile2}'

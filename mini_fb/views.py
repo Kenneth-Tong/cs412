@@ -3,9 +3,10 @@
 # Description: Two methods of viewing the website, through showing all profiles or selecting for a profile and selecting a template
 # associated with each type of response that the view.py retrieves
 
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import Profile, Image, StatusImage, StatusMessage
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm, UpdateStatusMessageForm
 
 class ShowAllProfiles(ListView):
@@ -121,3 +122,43 @@ class UpdateStatusMessageView(UpdateView): # Update a status message on someone'
         profile = self.object.profile
         # Reverse the URL for the profile page
         return reverse('show_profile', kwargs={'pk': profile.pk})
+
+class CreateFriendView(View):
+    '''A view to add a friend to a profile.'''
+
+    def dispatch(self, request, **kwargs):
+        pk = kwargs.get('pk')
+        other_pk = kwargs.get('other_pk')
+
+        profile = Profile.objects.get(pk=pk)
+        other_profile = Profile.objects.get(pk=other_pk)
+
+        if profile != other_profile:
+            profile.add_friend(other_profile)
+
+        return HttpResponseRedirect(reverse('show_profile', kwargs={'pk': profile.pk}))
+
+class ShowFriendSuggestionsView(DetailView):
+    # A view to show friend suggestions for a profile.
+
+    model = Profile
+    template_name = 'mini_fb/friend_suggestions.html'
+    context_object_name = 'profile'  # So we can access it in the template as "profile"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['suggestions'] = self.get_object().get_friend_suggestions()
+        return context
+
+class ShowNewsFeedView(DetailView):
+    # A view to show the news feed for a profile.
+    
+    model = Profile
+    template_name = 'mini_fb/news_feed.html'
+    context_object_name = 'profile'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = self.get_object()
+        context['news_feed'] = profile.get_news_feed()  # Fetch news feed
+        return context

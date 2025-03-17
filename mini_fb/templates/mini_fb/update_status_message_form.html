@@ -9,7 +9,7 @@
 <form action="{% url 'update_status_message' status_message.pk %}" method="POST">
     {% csrf_token %}
     <table>
-    {{form.as_table}}
+        {{form.as_table}}
     </table>
 
     <input type="submit" name="submit" value="Submit">
