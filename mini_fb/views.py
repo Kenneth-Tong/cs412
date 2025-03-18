@@ -139,26 +139,13 @@ class CreateFriendView(View):
         return HttpResponseRedirect(reverse('show_profile', kwargs={'pk': profile.pk}))
 
 class ShowFriendSuggestionsView(DetailView):
-    # A view to show friend suggestions for a profile.
-
+    # A view to show friend suggestions for a profile
     model = Profile
     template_name = 'mini_fb/friend_suggestions.html'
     context_object_name = 'profile'  # So we can access it in the template as "profile"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['suggestions'] = self.get_object().get_friend_suggestions()
-        return context
-
 class ShowNewsFeedView(DetailView):
-    # A view to show the news feed for a profile.
-    
+    # A view to show the news feed for a profile
     model = Profile
     template_name = 'mini_fb/news_feed.html'
     context_object_name = 'profile'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        profile = self.get_object()
-        context['news_feed'] = profile.get_news_feed()  # Fetch news feed
-        return context

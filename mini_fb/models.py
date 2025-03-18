@@ -62,31 +62,14 @@ class Profile(models.Model):
         return profile
     
     def get_news_feed(self):
-        message_list = []
-
-        # Add this profile's messages
-        for message in self.get_status_messages():
-            inserted = False
-            for i in range(len(message_list)):
-                if message.timestamp > message_list[i].timestamp:
-                    message_list.insert(i, message)
-                    inserted = True
-                    break
-            if not inserted:
-                message_list.append(message)
-
-        # Add friends' messages in order
-        for friend in self.get_friends():
-            for message in friend.get_status_messages():
-                inserted = False
-                for i in range(len(message_list)):
-                    if message.timestamp > message_list[i].timestamp:
-                        message_list.insert(i, message)
-                        inserted = True
-                        break
-                if not inserted:
-                    message_list.append(message)
-        return message_list
+        friends = self.get_friends() # Get the friends list
+        profile = []
+        for friend in friends:
+            profile.append(friend)
+        
+        profile.append(self)
+        messages = StatusMessage.objects.filter(profile__in=profile).order_by('-timestamp') # Order by time
+        return messages
 
     def __str__(self):
         '''Return a string representation of this Article object.'''

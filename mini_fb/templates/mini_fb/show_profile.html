@@ -25,7 +25,6 @@
         <h2>Recent Status Post</h2>
         {% for message in profile.get_status_messages %}
             <div>
-                <small>At {{message.timestamp}}</small>
                 <p>
                     {{message.message}}
                     <br>
@@ -39,6 +38,7 @@
                             </tr>
                         </table>
                     {% endif %}
+                    <p><small>Posted at {{message.timestamp}}</small></p>
                     <li><a href="{% url 'update_status_message' message.pk %}">Update Status Message</a></li>
                     <li><a href="{% url 'delete_status_message' message.pk %}">Delete Status Message</a></li>
                 </p>
@@ -46,15 +46,20 @@
             <hr>
         {% endfor %}
         <h2>{{profile.first_name}} {{profile.last_name}}'s friends</h2>
-        {% with profile.get_friends as friends %} <!-- Store the value of friends for the if statement -->
+        {% with profile.get_friends as friends %} <!-- Storing the value of friends for the if statement -->
             {% if friends %}
                 <table class="invisible">
                     <tr>
                         {% for friend_profile in friends %}
                             {% if friend_profile.image_url %}
-                                <td class="invisible"><img src="{{ friend_profile.image_url }}" alt="{{ friend_profile.image_url }}"
+                            <td class="invisible">
+                                <a href="{% url 'show_profile' pk=friend_profile.pk %}">
+                                <img src="{{friend_profile.image_url}}" alt="{{friend_profile.image_url}}"
                                     width="474"
-                                    height="355"></td>
+                                    height="355">
+                                </a>
+                            </td>
+                         
                             {% endif %}
                         {% endfor %}
                     </tr>

@@ -10,9 +10,13 @@
         <tr>
             {% for friend_profile in profile.get_friend_suggestions %}
                 {% if friend_profile.image_url %}
-                    <td class="invisible"><img src="{{friend_profile.image_url}}" alt="{{friend_profile.image_url}}"
+                    <td class="invisible">
+                        <a href="{% url 'show_profile' pk=friend_profile.pk %}">
+                            <img src="{{friend_profile.image_url}}" alt="{{friend_profile.image_url}}"
                         width="474"
-                        height="355"></td>
+                        height="355">
+                        </a>
+                    </td>
                 {% endif %}
             {% endfor %}
         </tr>
