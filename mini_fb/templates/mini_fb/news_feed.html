@@ -18,7 +18,9 @@
                 <table>
                     <tr class="invisible">
                     {% for img in status.get_images %}
-                        <td class="invisible"><img src='{{img.image_file.url}}' alt='{{img.image_file.url}}'></td>
+                        <td class="invisible"><img src='{{img.image_file.url}}' alt='{{img.image_file.url}}'
+                            width="200"
+                            height=auto></td>
                     {% endfor %} 
                     </tr>
                 </table>

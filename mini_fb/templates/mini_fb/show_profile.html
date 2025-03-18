@@ -33,7 +33,9 @@
                             <tr class="invisible">
                             {% for img in message.get_images %}
                                 <br>    
-                                <td class="invisible"><img src='{{img.image_file.url}}' alt='{{img.image_file.url}}'></td>
+                                <td class="invisible"><img src='{{img.image_file.url}}' alt='{{img.image_file.url}}'  
+                                    width="200"
+                                    height=auto></td>
                             {% endfor %} 
                             </tr>
                         </table>
@@ -59,13 +61,12 @@
                                     height="355">
                                 </a>
                             </td>
-                         
                             {% endif %}
                         {% endfor %}
                     </tr>
                     <tr class="invisible">
                         {% for friend_profile in friends %}
-                            <td class="invisible">{{ friend_profile.first_name }} {{ friend_profile.last_name }}</td>
+                            <td class="invisible">{{friend_profile.first_name}} {{friend_profile.last_name}}</td>
                         {% endfor %}
                     </tr>
                 </table>
