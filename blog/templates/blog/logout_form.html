@@ -1,0 +1,13 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<div class="logout-container">
+  <h2>Logout Confirmation</h2>
+  <form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <p>Are you sure you want to logout?</p>
+    <button type="submit" class="Submit">Yes, Logout</button>
+    <a href="{% url 'show_all' %}" class="Cancel">Cancel</a>
+  </form>
+</div>
+{% endblock %}

@@ -4,6 +4,7 @@
 
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 class Profile(models.Model):
     # Data attributes of a profile: most are text fields
@@ -12,7 +13,7 @@ class Profile(models.Model):
     city = models.TextField(blank=False)
     email_address = models.TextField(blank=False)
     image_url = models.URLField(blank=True) # Image for profile
-    # image_url = models.ImageField(blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def get_status_messages(self):
         messages = StatusMessage.objects.filter(profile=self)

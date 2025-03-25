@@ -8,6 +8,8 @@ from django.urls import reverse
 from .models import Profile, Image, StatusImage, StatusMessage
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm, UpdateStatusMessageForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 
 class ShowAllProfiles(ListView):
     '''Create a subclass of ListView to display all blog articles.'''
@@ -25,7 +27,7 @@ class CreateProfileView(CreateView):
     form_class = CreateProfileForm
     template_name = "mini_fb/create_profile_form.html"
 
-class CreateStatusMessageView(CreateView):
+class CreateStatusMessageView(LoginRequiredMixin, CreateView):
     '''A view to create a new comment and save it to the database.'''
 
     form_class = CreateStatusMessageForm
@@ -84,12 +86,25 @@ class CreateStatusMessageView(CreateView):
         # call reverse to generate the URL for this Article
         return reverse('show_profile', kwargs={'pk':pk})
 
-class UpdateProfileView(UpdateView):
+    def dispatch(self, request, *args, **kwargs):
+        status_message = self.get_object()
+        if status_message.profile.user != request.user:
+            return HttpResponseRedirect(reverse('show_profile', kwargs={'pk': status_message.profile.pk}))
+        return super().dispatch(request, *args, **kwargs)
+
+
+class UpdateProfileView(LoginRequiredMixin, UpdateView):
     model = Profile
     form_class = UpdateProfileForm
     template_name = "mini_fb/update_profile_form.html"
 
-class DeleteStatusMessageView(DeleteView): # Delete a status message
+    def dispatch(self, request, *args, **kwargs):
+        status_message = self.get_object()
+        if status_message.profile.user != request.user:
+            return HttpResponseRedirect(reverse('show_profile', kwargs={'pk': status_message.profile.pk}))
+        return super().dispatch(request, *args, **kwargs)
+
+class DeleteStatusMessageView(LoginRequiredMixin, DeleteView): # Delete a status message
     '''A view to delete a message and remove it from the database.'''
 
     template_name = "mini_fb/delete_status_form.html"
@@ -109,7 +124,13 @@ class DeleteStatusMessageView(DeleteView): # Delete a status message
         # reverse to show the profile page
         return reverse('show_profile', kwargs={'pk':profile.pk})
 
-class UpdateStatusMessageView(UpdateView): # Update a status message on someone's profile
+    def dispatch(self, request, *args, **kwargs):
+        status_message = self.get_object()
+        if status_message.profile.user != request.user:
+            return HttpResponseRedirect(reverse('show_profile', kwargs={'pk': status_message.profile.pk}))
+        return super().dispatch(request, *args, **kwargs)
+
+class UpdateStatusMessageView(LoginRequiredMixin, UpdateView): # Update a status message on someone's profile
     model = StatusMessage
     form_class = UpdateStatusMessageForm
     template_name = "mini_fb/update_status_message_form.html"
@@ -122,6 +143,12 @@ class UpdateStatusMessageView(UpdateView): # Update a status message on someone'
         profile = self.object.profile
         # Reverse the URL for the profile page
         return reverse('show_profile', kwargs={'pk': profile.pk})
+    
+    def dispatch(self, request, *args, **kwargs):
+        status_message = self.get_object()
+        if status_message.profile.user != request.user:
+            return HttpResponseRedirect(reverse('show_profile', kwargs={'pk': status_message.profile.pk}))
+        return super().dispatch(request, *args, **kwargs)
 
 class CreateFriendView(View):
     '''A view to add a friend to a profile.'''

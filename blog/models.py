@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 class Comment(models.Model):
     '''Encapsulate the idea of a Comment on an Article.'''
@@ -12,10 +13,13 @@ class Comment(models.Model):
     def __str__(self):
         '''Return a string representation of this Comment object.'''
         return f'{self.text}'
-
+    
 class Article(models.Model):
     '''Encapsulate the idea of a Article by some author.'''
 
+    # data attributes of a Article:
+    user = models.ForeignKey(User, on_delete=models.CASCADE) ## NEW
+    
     # data attributes of a Article:
     title = models.TextField(blank=False)
     text = models.TextField(blank=False)

@@ -2,16 +2,15 @@
 {% extends 'mini_fb/base.html' %}
 
 {% block content %}
-<ul> <!-- Link to update profile -->
-    <li><a href="{% url 'update_profile' profile.pk %}">Update Profile</a></li>
- <!-- Link to create status update -->
-    <li><a href="{% url 'create_status' profile.pk %}">Create Status Update</a></li>
-<!-- Link to news feed -->
-    <li><a href="{% url 'news_feed' profile.pk %}">View News Feed</a></li>
-</ul>
+{% if user.is_authenticated and user == profile.user %}
+    <ul>
+        <li><a href="{% url 'update_profile' profile.pk %}">Update Profile</a></li>
+        <li><a href="{% url 'create_status' profile.pk %}">Create Status Update</a></li>
+        <li><a href="{% url 'news_feed' profile.pk %}">View News Feed</a></li>
+    </ul>
+{% endif %}
 
 <main class="grid-container">
-    
     <article class="featured">
         {% if profile.image_url %} <!-- If there is a picture associated with the person, add it to the webpage -->
 		    <img src="{{profile.image_url}}" alt="{{profile.image_url}}">
@@ -41,8 +40,10 @@
                         </table>
                     {% endif %}
                     <p><small>Posted at {{message.timestamp}}</small></p>
-                    <li><a href="{% url 'update_status_message' message.pk %}">Update Status Message</a></li>
-                    <li><a href="{% url 'delete_status_message' message.pk %}">Delete Status Message</a></li>
+                    {% if user.is_authenticated and user == profile.user %}
+                        <li><a href="{% url 'update_status_message' message.pk %}">Update Status Message</a></li>
+                        <li><a href="{% url 'delete_status_message' message.pk %}">Delete Status Message</a></li>
+                    {% endif %}
                 </p>
             </div>
             <hr>
