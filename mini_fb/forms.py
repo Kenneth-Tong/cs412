@@ -12,8 +12,7 @@ class CreateProfileForm(forms.ModelForm):
     class Meta:
         '''associate this form with a model from our database.'''
         model = Profile
-        fields = "__all__"
-
+        exclude = ['user']  # Set the user myself
 
 class CreateStatusMessageForm(forms.ModelForm):
     '''A form to add a message to the database.'''

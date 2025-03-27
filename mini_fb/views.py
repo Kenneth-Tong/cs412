@@ -9,7 +9,7 @@ from .models import Profile, Image, StatusImage, StatusMessage
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm, UpdateStatusMessageForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied
+from django.contrib.auth.forms import UserCreationForm
 
 class CustomLoginMixin(LoginRequiredMixin):
     def get_login_url(self):
@@ -39,6 +39,23 @@ class ShowProfilePageView(DetailView):
 class CreateProfileView(CreateView):
     form_class = CreateProfileForm
     template_name = "mini_fb/create_profile_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add the UserCreationForm to the context
+        context['user_form'] = UserCreationForm()
+        return context
+
+    def form_valid(self, form):
+        user_form = UserCreationForm(self.request.POST)
+        user = user_form.save()
+        
+        form.instance.user = user # Attach the user to the profile
+        
+        from django.contrib.auth import login # Logging the user in
+        login(self.request, user)
+        
+        return super().form_valid(form) # Saving form
 
 class CreateStatusMessageView(CustomLoginMixin, CreateView):
     context_object_name = 'status_message'
@@ -123,7 +140,7 @@ class UpdateStatusMessageView(CustomLoginMixin, UpdateView): # Update a status m
 
 class CreateFriendView(CustomLoginMixin, View):
     def dispatch(self, request, *args, **kwargs):
-        profile = request.user.profile
+        profile = Profile.objects.filter(user=self.request.user).first()
         other_pk = kwargs.get('other_pk')
         other_profile = Profile.objects.get(pk=other_pk)
         
