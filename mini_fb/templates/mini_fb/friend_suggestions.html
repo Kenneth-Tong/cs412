@@ -3,33 +3,31 @@
 {% extends 'mini_fb/base.html' %}
 
 {% block content %}
-<h1>Friend Suggestions for {{profile.first_name}} {{profile.last_name}}</h1>
+    <h1>Friend Suggestions for {{profile.first_name}} {{profile.last_name}}</h1>
 
-<ul>
-    <table class="invisible">
-        <tr>
-            {% for friend_profile in profile.get_friend_suggestions %}
-                {% if friend_profile.image_url %}
-                    <td class="invisible">
-                        <a href="{% url 'show_profile' pk=friend_profile.pk %}">
-                            <img src="{{friend_profile.image_url}}" alt="{{friend_profile.image_url}}"
-                        width="474"
-                        height="355">
-                        </a>
-                    </td>
-                {% endif %}
-            {% endfor %}
-        </tr>
-        <tr class="invisible">
-            {% for friend_profile in profile.get_friend_suggestions %}
-                <td class="invisible">{{friend_profile.first_name}} {{friend_profile.last_name}}</td>
-            {% endfor %}
-        </tr>
-            {% for friend_profile in profile.get_friend_suggestions %}
-                <td class="invisible"><a href="{% url 'add_friend' profile.pk friend_profile.pk %}">Add Friend</a></td>
-            {% endfor %}
-    </table>
-</ul>
-
-<a href="{% url 'show_profile' profile.pk %}">Back to Profile</a>
+    <ul>
+        <table class="invisible">
+            <tr>
+                {% for friend_profile in profile.get_friend_suggestions %}
+                    {% if friend_profile.image_url %}
+                        <td class="invisible">
+                            <a href="{% url 'show_profile' pk=friend_profile.pk %}">
+                                <img src="{{friend_profile.image_url}}" alt="{{friend_profile.image_url}}"
+                            width="474"
+                            height="355">
+                            </a>
+                        </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr class="invisible">
+                {% for friend_profile in profile.get_friend_suggestions %}
+                    <td class="invisible">{{friend_profile.first_name}} {{friend_profile.last_name}}</td>
+                {% endfor %}
+            </tr>
+                {% for friend_profile in profile.get_friend_suggestions %}
+                    <td class="invisible"><a href="{% url 'add_friend' friend_profile.pk %}">Add Friend</a></td>
+                {% endfor %}
+        </table>
+    </ul>
 {% endblock %}

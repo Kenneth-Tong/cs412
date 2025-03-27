@@ -11,7 +11,7 @@
         <tr> <!-- Create a column for pictures and column for descriptions -->
             <td>
             {% if p.image_url %} <!-- If there is an image assocaited with the Profile, display it as a clickable link -->
-                <a href="{% url 'show_profile' p.pk %}">
+                <a href="{% url 'show_profile' pk=p.pk %}">
                 <img src="{{p.image_url}}" alt="{{profile.image_url}}"
                 width="474"
                 height="355">

@@ -13,15 +13,14 @@ class Profile(models.Model):
     city = models.TextField(blank=False)
     email_address = models.TextField(blank=False)
     image_url = models.URLField(blank=True) # Image for profile
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile')
 
     def get_status_messages(self):
         messages = StatusMessage.objects.filter(profile=self)
         return messages
 
-    def get_absolute_url(self):
-        '''Return the URL to display one instance of this model.'''
-        return reverse('show_profile', kwargs={'pk':self.pk}) # Looking at URLS to redirect user to profile they created
+    def get_absolute_url(self): # Profile still uses pk to display one
+        return reverse('show_profile', kwargs={'pk': self.pk})
     
     def get_friends(self):
         friends_as_profile1 = Friend.objects.filter(profile1=self) # If profile 1 is this person's profile

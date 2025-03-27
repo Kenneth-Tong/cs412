@@ -2,11 +2,13 @@
 {% extends 'mini_fb/base.html' %}
 
 {% block content %}
+
 {% if user.is_authenticated and user == profile.user %}
+    <!-- Show edit buttons only if the viewer owns this profile -->
     <ul>
-        <li><a href="{% url 'update_profile' profile.pk %}">Update Profile</a></li>
-        <li><a href="{% url 'create_status' profile.pk %}">Create Status Update</a></li>
-        <li><a href="{% url 'news_feed' profile.pk %}">View News Feed</a></li>
+        <li><a href="{% url 'update_profile' %}">Update Profile</a></li>
+        <li><a href="{% url 'create_status' %}">Create Status Update</a></li>
+        <li><a href="{% url 'news_feed' %}">View News Feed</a></li>
     </ul>
 {% endif %}
 
@@ -35,7 +37,7 @@
                                 <td class="invisible"><img src='{{img.image_file.url}}' alt='{{img.image_file.url}}'  
                                     width="200"
                                     height=auto></td>
-                            {% endfor %} 
+                            {% endfor %}
                             </tr>
                         </table>
                     {% endif %}
@@ -57,7 +59,7 @@
                             {% if friend_profile.image_url %}
                             <td class="invisible">
                                 <a href="{% url 'show_profile' pk=friend_profile.pk %}">
-                                <img src="{{friend_profile.image_url}}" alt="{{friend_profile.image_url}}"
+                                    <img src="{{friend_profile.image_url}}" alt="{{friend_profile.image_url}}"
                                     width="474"
                                     height="355">
                                 </a>
@@ -74,7 +76,10 @@
             {% endif %}
         {% endwith %}
         <br>
-        <a href="{% url 'friend_suggestions' profile.pk %}">See Friend Suggestions</a>
+        <!-- Only able to add friends and see suggestions if you are that profile! -->
+        {% if user.is_authenticated and user == profile.user %}
+            <a href="{% url 'friend_suggestions' %}">See Friend Suggestions</a>
+        {% endif %}
     </article>
 </main>
 {% endblock %}
