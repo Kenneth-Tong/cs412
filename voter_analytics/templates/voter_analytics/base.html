@@ -1,0 +1,16 @@
+<!-- voter_anlytics/templates/voter_anlytics/base.html -->
+{% load static %}
+<html>
+<head>
+    <title>Voter Management</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'voters' %}">Voter List</a> |
+        <a href="{% url 'graphs' %}">Graphs</a>
+    </nav>
+    <hr>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

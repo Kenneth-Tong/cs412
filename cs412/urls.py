@@ -26,6 +26,8 @@ urlpatterns = [
     path('restaurant/', include('restaurant.urls')), 
     path('blog/', include('blog.urls')), # include the URLs from our blog project's urls.py file
     path('mini_fb/', include('mini_fb.urls')),
+    path('marathon_analytics/', include('marathon_analytics.urls')),
+    path('voter_analytics/', include('voter_analytics.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
