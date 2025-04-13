@@ -11,7 +11,6 @@ class Patient(models.Model):
     last_name = models.TextField(blank=False)
     date_of_birth = models.DateField(blank=False)
     phone_number = models.TextField(blank=False)
-    address = models.TextField(blank=False)
     image_file = models.ImageField(blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -26,8 +25,9 @@ class Patient(models.Model):
 class Dentist(models.Model):
     first_name = models.TextField(blank=False)
     last_name = models.TextField(blank=False)
-    specialty = models.TextField(blank=False)
+    speciality = models.TextField(blank=False)
     email = models.TextField(blank=False)
+    bio = models.TextField(blank=False)
     image_file = models.ImageField(blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 

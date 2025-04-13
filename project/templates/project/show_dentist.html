@@ -1,0 +1,22 @@
+<!-- project/templates/project/show_dentist.html -->
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<main class="grid-container">
+    <article class="featured">
+        <div>
+            <h2>Dr. {{dentist.first_name}} {{dentist.last_name}}</h2>
+        </div>
+        {% if dentist.image_file %} <!-- If there is a picture associated with the dentist, add it to the webpage -->
+		    <img src="{{dentist.image_file.url}}" alt="{{dentist.image_file.url}}" width="400">
+		{% endif %}
+        
+        <div>
+            <p>Speciality: {{dentist.speciality}}</p>
+            <p>Email: {{dentist.email}}</p>
+            <p>{{dentist.bio}}</p>
+        </div>
+    </article>
+</main>
+{% endblock %}

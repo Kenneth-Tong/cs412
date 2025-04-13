@@ -4,9 +4,14 @@
 # a url which will then be processed by the views.py
 
 from django.urls import path
-from .views import *
-# from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
+from . import views
 
 urlpatterns = [
-    # path('', FrontPage.as_view(), name="front_page"),
-]
+    path('', views.FrontPageView.as_view(), name='dashboard'),
+    path('dashboard/', views.FrontPageView.as_view(), name='dashboard'),
+    path('dentists/', views.ShowAllDentistsView.as_view(), name='show_all_dentists'),
+    path('dentists/<int:pk>/', views.ShowDentistPageView.as_view(), name='show_dentist'),
+    path('about/', views.AboutPageView.as_view(), name='about'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
