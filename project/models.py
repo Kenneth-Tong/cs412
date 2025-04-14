@@ -12,7 +12,7 @@ class Patient(models.Model):
     date_of_birth = models.DateField(blank=False)
     phone_number = models.TextField(blank=False)
     image_file = models.ImageField(blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='patient')
 
     def get_appointments(self):
         return self.appointments.all()
@@ -65,7 +65,7 @@ class Schedule(models.Model):
 
 # Appointment — if patient is not set, it's an open slot
 class Appointment(models.Model):
-    appointment_time = models.DateTimeField()
+    appointment_time = models.DateTimeField(blank=True)
     note = models.TextField(blank=True)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments')
     dentist = models.ForeignKey(Dentist, on_delete=models.CASCADE, related_name='appointments')

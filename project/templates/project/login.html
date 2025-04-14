@@ -1,0 +1,17 @@
+<!-- project/mini_fb/project/login.html -->
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<h1>Login</h1>
+<form method="post" action="{% url 'login' %}" >
+    {% csrf_token %}
+    {{form}}
+    <input type="hidden" name="next" value="{% url 'dashboard' %}">
+    <input type="submit" value="Login">
+</form>
+
+<hr>
+Don't have an account? <a href="{% url 'register' %}">Register here</a>.
+
+{% endblock %}
