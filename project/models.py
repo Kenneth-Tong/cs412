@@ -4,6 +4,7 @@
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.forms import ValidationError
 from django.urls import reverse
 
 # Profile Background
@@ -84,6 +85,24 @@ class Appointment(models.Model):
     
     def duration(self): # Minutes lasting
         return (self.end - self.start).total_seconds() / 60
+    
+    def overlaps_blocked_time(self): # Check appointment scheudle with blocked time
+        blocked_times = BlockedTime.objects.filter(dentist=self.dentist)
+        for blocked in blocked_times:
+            if (self.start < blocked.end and self.end > blocked.start):
+                return True
+        return False
+    
+    def clean(self): # Check when appointment is created if the starttime is after endtime OR if appointment times overlap during formvalid() before saving
+        if self.start >= self.end:
+            raise ValidationError("End time must be later than start time!")
+        
+        overlapping_appointments = Appointment.objects.filter(dentist=self.dentist)
+        
+        for appointment in overlapping_appointments: # Check if the new appointment overlaps with an existing appointment
+            if (self.start < appointment.end and self.end > appointment.start):
+                raise ValidationError("This appointment time overlaps with an existing appointment for this dentist.")
+
     
     def __str__(self):
         if self.patient.profile and self.dentist.profile: # If no profile set

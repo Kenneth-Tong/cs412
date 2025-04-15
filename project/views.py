@@ -137,7 +137,7 @@ class MakeAppointment(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('appointment_detail', kwargs={'pk': self.object.pk})
+        return reverse('view_appointment', kwargs={'pk': self.object.pk})
 
     
 class UpdateAppointment(UpdateView):

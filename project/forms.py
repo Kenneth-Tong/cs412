@@ -19,7 +19,7 @@ class DentistCreateAppointmentForm(forms.ModelForm):
 class PatientUpdateAppointmentForm(forms.ModelForm):
     class Meta:
         model = Appointment
-        fields = ['start', 'notes'] # Patients can only edit notes and start time
+        fields = ['start', 'end', 'notes'] # Patients can only edit notes and start time
 
 class DentistUpdateAppointmentForm(forms.ModelForm):
     class Meta:
