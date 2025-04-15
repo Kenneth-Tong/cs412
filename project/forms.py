@@ -4,7 +4,7 @@
 # forms, will be used with views.py
 
 from django import forms
-from .models import Patient, Dentist, Appointment, Schedule
+from .models import Patient, Dentist, Appointment
 
 class CreateAppointmentForm(forms.ModelForm):
     class Meta:
