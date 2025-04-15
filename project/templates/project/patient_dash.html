@@ -1,0 +1,13 @@
+
+<h2>Welcome back to ToothSync, {{profile.first_name}}</h2>
+<p>Your trusted dental portal for patients and professionals.</p>
+<hr>
+
+<h3>Your Appointments:</h4>
+{% if appointments %}
+    {% for appointment in appointments %}
+        <p>{{appointment}}</p>
+    {% endfor %}
+{% else %} <!-- If appointment is empty list, then display below -->
+    <p>You have no upcoming appointments.</p> 
+{% endif %}

@@ -5,32 +5,27 @@
         <h2>Welcome back to ToothSync, {{profile.first_name}}</h2>
     {% elif user_type == 'dentist' %}
         <h2>Welcome back to ToothSync, Dr. {{profile.first_name}}</h2>
-    {% else %} <!-- Not logged in -->
+    {% else %}
         <h2>Welcome to ToothSync</h2>
     {% endif %}
+
     <p>Your trusted dental portal for patients and professionals.</p>
+    <hr>
 
-    {% if user_type == 'patient' %}
-        <h3>Your Appointments:</h4>
-        {% if appointments %}
-            {% for appointment in appointments %}
-                <p>{{appointment}}</p>
-            {% endfor %}
-        {% else %} <!-- If appointment is empty list, then display below -->
-            <p>You have no upcoming appointments.</p> 
-        {% endif %}
-
-    {% elif user_type == 'dentist' %}
-        <h3>Your Patient Scheduled Appointments:</h3>
-        {% if appointments %}
-            {% for appointment in appointments %}
-                <p>{{appointment}}</p>
-            {% endfor %}
-        {% else %} <!-- If appointment is empty list, then display below -->
-            <p>You have no scheduled appointments.</p> 
-        {% endif %}
-
-    {% else %}
+    {% if not request.user.is_authenticated %}
         <p>Please login to your profile to view your personalized dashboard.</p>
     {% endif %}
+
+    {% if user_type == 'patient' %}
+        <main>
+            {% include 'project/patient_dash.html' %}
+        </main>
+    
+    {% elif user_type == 'dentist' %}
+        <main>
+            {% include 'project/dentist_dash.html' %}
+        </main>
+        
+    {% endif %}
+
 {% endblock %}

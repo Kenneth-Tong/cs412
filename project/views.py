@@ -21,12 +21,14 @@ class FrontPageView(TemplateView):
                 context['user_type'] = 'patient'
                 context['profile'] = patient.profile
                 context['appointments'] = patient.get_appointments()
+                template_name = 'project/patient_dash.html'
             except Patient.DoesNotExist:
                 try:
                     dentist = Dentist.objects.get(profile__user=user)
                     context['user_type'] = 'dentist'
                     context['profile'] = dentist.profile
                     context['appointments'] = dentist.get_appointments()
+                    template_name = 'project/dentist_dash.html'
                 except Dentist.DoesNotExist: # Should not happen
                     context['user_type'] = 'none'
                     context['profile'] = None

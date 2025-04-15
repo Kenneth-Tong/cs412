@@ -1,0 +1,8 @@
+<h3>Your Patient Scheduled Appointments:</h3>
+{% if appointments %}
+    {% for appointment in appointments %}
+        <p>{{appointment}}</p>
+    {% endfor %}
+{% else %} <!-- If appointment is empty list, then display below -->
+    <p>You have no scheduled appointments.</p> 
+{% endif %}
