@@ -4,13 +4,12 @@
     {% if user_type == 'patient' %}
         <h2>Welcome back to ToothSync, {{profile.first_name}}</h2>
     {% elif user_type == 'dentist' %}
-        <h2>Welcome back to ToothSync, Dr. {{profile.first_name}}</h2>
+        <h2>Welcome back to ToothSync, Dr. {{profile.last_name}}</h2>
     {% else %}
         <h2>Welcome to ToothSync</h2>
     {% endif %}
 
     <p>Your trusted dental portal for patients and professionals.</p>
-    <hr>
 
     {% if not request.user.is_authenticated %}
         <p>Please login to your profile to view your personalized dashboard.</p>

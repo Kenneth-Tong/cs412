@@ -1,7 +1,9 @@
 <h3>Your Patient Scheduled Appointments:</h3>
 {% if appointments %}
     {% for appointment in appointments %}
-        <p>{{appointment}}</p>
+        <p>{{appointment.patient.profile.first_name}} {{appointment.patient.profile.last_name}} at {{appointment.start}}</p>
+        <a href="{% url 'view_appointment' pk=appointment.pk %}" class="btn btn-primary">View Appointment</a>
+        <hr>
     {% endfor %}
 {% else %} <!-- If appointment is empty list, then display below -->
     <p>You have no scheduled appointments.</p> 

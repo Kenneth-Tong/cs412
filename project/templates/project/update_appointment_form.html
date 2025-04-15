@@ -2,10 +2,10 @@
 {% extends 'project/base.html' %}
 
 {% block content %}
-<h1>Update {{patient.first_name}} {{patient.last_name}}'s Profile</h1>
+<h1>Update {{appointment.patient.profile.first_name}} {{appointment.patient.profile.last_name}}'s Appointment</h1>
 
 <!-- display the HTML form -->
-<form action="{% url 'update_appointment' %}" method="POST">
+<form action="{% url 'update_appointment' appointment.pk %}" method="POST">
     {% csrf_token %}
     <table>
         {{form.as_table}}
@@ -13,7 +13,7 @@
 
     <input type="submit" name="submit" value="Submit">
 </form>
-<form action="{% url 'dashboard' %}" method="GET">
+<form action="{% url 'view_appointment' appointment.pk %}" method="GET">
     <input type="submit" value="Cancel">
 </form>
 

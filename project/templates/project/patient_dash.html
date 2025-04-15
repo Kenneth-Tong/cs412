@@ -1,13 +1,27 @@
-
-<h2>Welcome back to ToothSync, {{profile.first_name}}</h2>
-<p>Your trusted dental portal for patients and professionals.</p>
-<hr>
-
 <h3>Your Appointments:</h4>
 {% if appointments %}
     {% for appointment in appointments %}
-        <p>{{appointment}}</p>
+        <p>{{appointment.dentist.profile.first_name}} {{appointment.dentist.profile.last_name}} at {{appointment.start}}</p>
+        <a href="{% url 'view_appointment' pk=appointment.pk %}" class="btn btn-primary">View Appointment</a>
+        <hr>
     {% endfor %}
 {% else %} <!-- If appointment is empty list, then display below -->
     <p>You have no upcoming appointments.</p> 
+{% endif %}
+
+<h3>Treatments You Received:</h3>
+{% if get_treatment_history %}
+    <ul>
+    {% for treatment in get_treatment_history %}
+        <li>
+        Dentist: {{treatment.appointment.dentist}}
+        Date: {{treatment.appointment.start}}
+        Procedure: {{treatment.procedure}}<br>
+        Tooth #: {{treatment.tooth_number}}<br>
+        Dentist notes: {{treatment.dentist.notes}}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No previous treatment history.</p>
 {% endif %}

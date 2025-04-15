@@ -4,14 +4,25 @@
 # forms, will be used with views.py
 
 from django import forms
-from .models import Patient, Dentist, Appointment
+from .models import Appointment
 
-class CreateAppointmentForm(forms.ModelForm):
+class PatientCreateAppointmentForm(forms.ModelForm):
     class Meta:
         model = Appointment
-        exclude = ['patient']  # Patient making appointment already included automatically
+        exclude = ['patient']  # Patient is set in the view
 
-class UpdateFormForm(forms.ModelForm):
+class DentistCreateAppointmentForm(forms.ModelForm):
     class Meta:
         model = Appointment
-        exclude = ['patient'] # Cannot edit appointments not part of their appointment list
+        exclude = ['dentist']  # Dentist is set in the view
+
+class PatientUpdateAppointmentForm(forms.ModelForm):
+    class Meta:
+        model = Appointment
+        fields = ['start', 'notes'] # Patients can only edit notes and start time
+
+class DentistUpdateAppointmentForm(forms.ModelForm):
+    class Meta:
+        model = Appointment
+        exclude = ['patient'] # Dentists can edit everything but patient, they can hand off patients if needed
+

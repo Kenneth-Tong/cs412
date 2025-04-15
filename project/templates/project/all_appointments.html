@@ -1,0 +1,21 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+    <h2>All Appointments</h2>
+    <h3>Welcome Dr. {{profile.last_name}}</h3>
+
+    {% if appointments %}
+        {% for appointment in appointments %}
+            <h4>{{appointment.start}}</h4>
+            {% if appointment.dentist.profile == profile %}
+                <p>Your appointment with patient {{appointment.patient.profile.first_name}} {{appointment.patient.profile.last_name}}</p>
+            {% else %}
+                <p>Dr. {{appointment.dentist.profile.last_name}}'s' appointment with {{appointment.patient.profile.first_name}} {{appointment.patient.profile.last_name}}</p>
+            {% endif %}
+            <a href="{% url 'view_appointment' pk=appointment.pk %}">View Details</a>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>No appointments available.</p>
+    {% endif %}
+{% endblock %}

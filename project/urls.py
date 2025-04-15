@@ -16,6 +16,7 @@ urlpatterns = [
     path('dentists/', views.ShowAllDentistsView.as_view(), name='show_all_dentists'),
     path('dentists/<int:pk>/', views.ShowDentistPageView.as_view(), name='show_dentist'),
     path('about/', views.AboutPageView.as_view(), name='about'),
+    path('all_appointments/', views.ShowAllAppointmentsView.as_view(), name='all_appointments'),
     path('appointments/<int:pk>/', views.AppointmentView.as_view(), name='view_appointment'),
     path('appointments/new/', views.MakeAppointment.as_view(), name='make_appointment'),
     path('appointment/<int:pk>/update', views.UpdateAppointment.as_view(), name='update_appointment'), 

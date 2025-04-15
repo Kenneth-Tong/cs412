@@ -34,6 +34,8 @@ class Dentist(models.Model):
     
     # def get_todays_appointments(self): # Get appointments today
 
+    # def get_procedures(self): # Get performed appointments
+
     def __str__(self):
         if self.profile: # If no profile set
             return f"Dr. {self.profile.first_name} {self.profile.last_name}"
@@ -49,12 +51,12 @@ class Patient(models.Model):
         return reverse('show_profile', kwargs={'pk': self.pk})
     
     def get_appointments(self):
-        print(Appointment.objects.filter(patient=self))
         return Appointment.objects.filter(patient=self)
 
     # def get_upcoming_appointments(self): # Get next appointments
 
-    # def get_previous_appointments(self):
+    def get_treatment_history(self):
+        return Treatment.objects.filter(patient=self)
 
     def __str__(self):
         if self.profile: # If no profile set
@@ -63,8 +65,8 @@ class Patient(models.Model):
 
 class BlockedTime(models.Model):
     dentist = models.ForeignKey(Dentist, on_delete=models.CASCADE, related_name='blocked_times')
-    start = models.DateTimeField(auto_now=True)
-    end = models.DateTimeField(auto_now=True)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
     reason = models.TextField(blank=True)
     
     def __str__(self):
@@ -73,8 +75,8 @@ class BlockedTime(models.Model):
 class Appointment(models.Model):
     dentist = models.ForeignKey(Dentist, on_delete=models.CASCADE, related_name='appointments')
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments')
-    start = models.DateTimeField(auto_now=True)
-    end = models.DateTimeField(auto_now=True)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
     notes = models.TextField(blank=True)
     
     def get_absolute_url(self):
@@ -92,7 +94,6 @@ class Treatment(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='treatments')
     procedure = models.TextField(blank=False)
     tooth_number = models.TextField(blank=False)
-    tooth_status = models.TextField(blank=False)
     dentist_notes = models.TextField(blank=True) 
     
     def __str__(self):

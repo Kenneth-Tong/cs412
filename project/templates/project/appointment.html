@@ -1,99 +1,17 @@
 {% extends 'project/base.html' %}
 
 {% block content %}
-<div class="appointment-container">
-    <!-- Appointment Header with Status -->
-    <div class="appointment-header">
-        <h1>
-            {% if appointment.patient %}
-                {{ appointment.patient.first_name }}'s Appointment
-            {% else %}
-                Available Time Slot
-            {% endif %}
-        </h1>
-        <div class="availability-badge {% if appointment.patient %}booked{% else %}available{% endif %}">
-            {% if appointment.patient %}Booked{% else %}Available{% endif %}
-        </div>
-    </div>
+    <h2>Appointment Details</h2>
 
-    <!-- Main Appointment Card -->
-    <div class="appointment-card">
-        <!-- Date/Time Section -->
-        <div class="appointment-section">
-            <h2><i class="fas fa-clock"></i> Appointment Time</h2>
-            <div class="datetime-display">
-                <div class="date">
-                    {{ appointment.appointment_time|date:"l, F j, Y" }}
-                </div>
-                <div class="time">
-                    {{ appointment.appointment_time|time:"g:i A" }}
-                </div>
-            </div>
-        </div>
+    {% if user_type == 'patient' %}
+        <main>
+            {% include 'project/appointment_patient.html' %}
+        </main>
 
-        <!-- Dentist Information -->
-        <div class="appointment-section">
-            <h2><i class="fas fa-user-md"></i> Dentist</h2>
-            <div class="professional-info">
-                <div class="avatar">
-                    {% if appointment.dentist.image_file %}
-                        <img src="{{ appointment.dentist.image_file.url }}" alt="Dr. {{ appointment.dentist.last_name }}">
-                    {% else %}
-                        <div class="avatar-initials">
-                            {{ appointment.dentist.first_name|first }}{{ appointment.dentist.last_name|first }}
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="professional-details">
-                    <h3>Dr. {{ appointment.dentist.last_name }}</h3>
-                    <p class="specialty">{{ appointment.dentist.speciality }}</p>
-                    <a href="{% url 'show_dentist' pk=appointment.dentist.pk %}" class="view-profile">
-                        View Full Profile
-                    </a>
-                </div>
-            </div>
-        </div>
+    {% elif user_type == 'dentist' %}
+        <main>
+            {% include 'project/appointment_dentist.html' %}
+        </main>
+    {% endif %}
 
-        <!-- Patient Information (if booked) -->
-        {% if appointment.patient %}
-        <div class="appointment-section">
-            <h2><i class="fas fa-user"></i> Patient</h2>
-            <div class="patient-info">
-                <p><strong>Name:</strong> {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</p>
-                {% if appointment.patient.phone %}
-                <p><strong>Phone:</strong> {{ appointment.patient.phone }}</p>
-                {% endif %}
-            </div>
-        </div>
-        {% endif %}
-
-        <!-- Notes Section -->
-        {% if appointment.note %}
-        <div class="appointment-section">
-            <h2><i class="fas fa-notes-medical"></i> Notes</h2>
-            <div class="notes-content">
-                {{ appointment.note|linebreaks }}
-            </div>
-        </div>
-        {% endif %}
-
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-            {% if not appointment.patient and request.user.is_authenticated and request.user.patient %}
-                <a href="{% url 'book_appointment' pk=appointment.pk %}" class="btn book-btn">
-                    <i class="fas fa-calendar-plus"></i> Book This Slot
-                </a>
-            {% elif appointment.patient == request.user.patient %}
-                <a href="{% url 'cancel_appointment' pk=appointment.pk %}" class="btn cancel-btn">
-                    <i class="fas fa-times-circle"></i> Cancel Appointment
-                </a>
-                <a href="{% url 'reschedule_appointment' pk=appointment.pk %}" class="btn reschedule-btn">
-                    <i class="fas fa-calendar-edit"></i> Reschedule
-                </a>
-            {% endif %}
-            <a href="{% url 'dentist_schedule' pk=appointment.dentist.pk %}" class="btn back-btn">
-                <i class="fas fa-arrow-left"></i> Back to Schedule
-            </a>
-        </div>
-    </div>
-</div>
+{% endblock %}

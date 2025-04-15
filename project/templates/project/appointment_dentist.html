@@ -1,0 +1,13 @@
+<p>Dentist: Dr. {{appointment.dentist.profile.first_name}} {{appointment.dentist.profile.last_name}}</p>
+<p>Patient: {{appointment.patient.profile.first_name}} {{appointment.patient.profile.last_name}}</p>
+<p>Date: {{appointment.start}}</p>
+<p>End Time: {{appointment.end}}</p>
+{% if appointment.notes %}
+    <p>Patient Notes: {{appointment.notes}}</p>
+{% else %}
+    <p>Patient notes: No notes yet.</p>
+{% endif %}
+
+{% if appointment.dentist.profile == profile %}
+    <a href="{% url 'update_appointment' pk=appointment.pk %}" class="btn btn-primary">Update Appointment</a>
+{% endif %}
