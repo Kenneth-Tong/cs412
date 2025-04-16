@@ -4,7 +4,7 @@
 # forms, will be used with views.py
 
 from django import forms
-from .models import Appointment, Treatment
+from .models import Appointment, Treatment, Profile, Patient, Dentist
 
 class PatientCreateAppointmentForm(forms.ModelForm):
     class Meta:
@@ -30,3 +30,35 @@ class UpdateTreatmentForm(forms.ModelForm): # Only dentists can access
     class Meta:
         model = Treatment
         exclude = ['appointment']
+
+class CreateProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        exclude = ['user']  # Set the user self
+
+class CreatePatientForm(forms.ModelForm):
+    date_of_birth = forms.DateField(input_formats=['%Y-%m-%d'])  # YYYY-MM-DD
+
+    class Meta:
+        model = Patient
+        exclude = ['profile']  # Set the user myself
+
+class CreateDentistForm(forms.ModelForm):
+    class Meta:
+        model = Dentist
+        exclude = ['profile']  # Set the user myself
+
+class UpdateProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        exclude = ['user']
+
+class UpdatePatientForm(forms.ModelForm):
+    class Meta:
+        model = Patient
+        exclude = ['profile']
+
+class UpdateDentistForm(forms.ModelForm):
+    class Meta:
+        model = Dentist
+        exclude = ['profile']

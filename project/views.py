@@ -3,11 +3,14 @@
 # Description: Viewing the website, through showing 
 # all dentists and detailed view of dentists
 
+from django.forms import ValidationError
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView
 from .models import Dentist, Appointment, Patient, Treatment
-from .forms import PatientUpdateAppointmentForm, DentistUpdateAppointmentForm, PatientCreateAppointmentForm, DentistCreateAppointmentForm, UpdateTreatmentForm
+from .forms import *
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 
 class CustomLoginMixin(LoginRequiredMixin): # Redirect to a login
     def get_login_url(self):
@@ -224,4 +227,132 @@ class UpdateTreatment(CheckProfile, CustomLoginMixin, UpdateView):
     def get_success_url(self):
         return reverse('view_treatment', kwargs={'pk': self.object.pk})
 
-# class CreateProfile(CreateView):
+
+class ProfileView(CheckProfile, CustomLoginMixin, DetailView):
+    model = Profile
+    template_name = 'project/base_profile.html'
+    context_object_name = 'profile'
+
+    def get_object(self):
+        if self.request.user.is_authenticated:
+            return self.request.user.project_profile
+        raise ValidationError("No Profile Associated")
+    
+    def get_context_data(self, **kwargs): # Get the profile's relationship model
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        if user.is_authenticated:
+            if context['user_type'] == 'dentist':
+                dentist = Dentist.objects.get(profile__user=user)
+                context['dentist'] = dentist
+            elif context['user_type'] == 'patient':
+                patient = Patient.objects.get(profile__user=user)
+                context['patient'] = patient
+        return context
+
+class CreatePatientView(CreateView):
+    form_class = CreateProfileForm
+    template_name = "project/create_patient_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_form'] = UserCreationForm()
+        context['patient_form'] = CreatePatientForm()
+        return context
+    
+    def form_valid(self, form):
+        user_form = UserCreationForm(self.request.POST)
+        patient_form = CreatePatientForm(self.request.POST)
+
+        if user_form.is_valid() and patient_form.is_valid():
+            user = user_form.save() # User saved
+
+            profile = form.save(commit=False)
+            profile.user = user
+            profile.save() # Save profile
+
+            patient = patient_form.save(commit=False)
+            patient.profile = profile
+            patient.save() # Save patient
+
+            login(self.request, user)
+
+            return super().form_valid(form)   
+            
+        else:
+            print("User form errors:", user_form.errors)
+            print("Patient form errors:", patient_form.errors)
+            print("Profile form errors:", form.errors)
+  
+    def get_success_url(self):
+        return reverse('dashboard')
+
+
+class CreateDentistView(CreateView):
+    form_class = CreateProfileForm
+    template_name = "project/create_dentist_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_form'] = UserCreationForm()
+        context['dentist_form'] = CreateDentistForm()
+        return context
+    
+    def form_valid(self, form):
+        user_form = UserCreationForm(self.request.POST)
+        dentist_form = CreateDentistForm(self.request.POST)
+
+        if user_form.is_valid() and dentist_form.is_valid():
+            user = user_form.save() # User saved
+
+            profile = form.save(commit=False)
+            profile.user = user
+            profile.save() # Save profile
+
+            dentist = dentist_form.save(commit=False)
+            dentist.profile = profile
+            dentist.save() # Save dentist
+
+            login(self.request, user)
+
+            return super().form_valid(form)   
+            
+        else:
+            print("User form errors:", user_form.errors)
+            print("Dentist form errors:", dentist_form.errors)
+            print("Profile form errors:", form.errors)
+  
+    def get_success_url(self):
+        return reverse('dashboard')
+    
+
+class UpdateProfile(CheckProfile, CustomLoginMixin, UpdateView):
+    model = Profile
+    template_name = "project/update_profile_form.html"
+
+    def get_form_class(self):
+        return UpdateProfileForm
+
+    def get_object(self):
+        profile = self.kwargs.get('pk') # Get the profile
+        return Profile.objects.filter(pk=profile).first()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        if user.is_authenticated:
+            if context['user_type'] == 'dentist':
+                dentist = Dentist.objects.get(profile__user=user)
+                context['dentist_form'] = UpdateDentistForm(instance=dentist) # Providing the instance of the dentist to edit
+            elif context['user_type'] == 'patient':
+                patient = Patient.objects.get(profile__user=user)
+                context['patient_form'] = UpdatePatientForm(instance=patient) # Providing the instance of the patient to edit
+        return context
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('view_profile', kwargs={'pk': self.object.pk})

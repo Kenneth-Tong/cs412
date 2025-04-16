@@ -12,6 +12,10 @@ from . import views
 
 urlpatterns = [
     path('', views.FrontPageView.as_view(), name='dashboard'),
+    path('profile/<int:pk>', views.ProfileView.as_view(), name='view_profile'),
+    path('profile/<int:pk>/update', views.UpdateProfile.as_view(), name='update_profile'),
+    path('create_patient/', views.CreatePatientView.as_view(), name='make_patient'),
+    path('create_dentist/', views.CreateDentistView.as_view(), name='make_dentist'),
     path('dashboard/', views.FrontPageView.as_view(), name='dashboard'),
     path('dentists/', views.ShowAllDentistsView.as_view(), name='show_all_dentists'),
     path('dentists/<int:pk>/', views.ShowDentistPageView.as_view(), name='show_dentist'),

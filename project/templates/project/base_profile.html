@@ -1,0 +1,23 @@
+<!-- project/templates/project/base_profile.html -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+    <h2>Your Profile Details</h2>
+
+    <img src="{{profile.image_file.url}}" alt="Profile Image" class="profile-img">
+    <h3>{{profile.first_name}} {{profile.last_name}}</h3>
+    <p>Phone: {{profile.phone}}</p>
+    <p>Address: {{profile.address}}</p>
+
+    {% if user_type == 'dentist' %}
+        <p>Specialty: {{dentist.speciality}}</p>
+        <p>Bio: {{dentist.bio}}</p>
+        <a href="{% url 'update_profile' profile.pk %}" class="btn btn-primary">Edit Profile</a>
+    {% elif user_type == 'patient' %}
+        <p>Insurance Provider: {{patient.insurance_provider}}</p>
+        <p>Date of Birth: {{patient.date_of_birth}}</p>
+        <a href="{% url 'update_profile' profile.pk %}" class="btn btn-primary">Edit Profile</a>
+    {% endif %}
+
+{% endblock %}

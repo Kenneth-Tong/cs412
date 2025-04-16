@@ -66,7 +66,7 @@ class Dentist(models.Model):
 class Patient(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="patient_profile", null=True)
     insurance_provider = models.TextField(blank=False)
-    date_of_birth = models.DateField(auto_now=True)
+    date_of_birth = models.DateField()
 
     def get_absolute_url(self):
         return reverse('show_profile', kwargs={'pk': self.pk})

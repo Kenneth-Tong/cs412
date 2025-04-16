@@ -17,6 +17,7 @@
                     <a href="{% url 'all_appointments' %}" class="btn btn-primary">Show All Appointments</a> |
                 {% endif %}
                 <a href="{% url 'make_appointment' %}">Make Appointment</a> |
+                <a href="{% url 'view_profile' pk=profile.pk %}">My Profile</a> |
                 <form method="post" action="{% url 'logout' %}" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit" style="
@@ -29,7 +30,9 @@
                         text-decoration: none;">Logout</button>
                 </form>
             {% else %} <!-- URLs for users who are not logged in -->
-                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'login' %}">Login</a> |
+                <a href="{% url 'make_patient' %}">Create Patient Account</a> |
+                <a href="{% url 'make_dentist' %}">Create Dentist Account</a>
             {% endif %}
         </nav>
         <hr>
