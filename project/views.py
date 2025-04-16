@@ -4,8 +4,8 @@
 # all dentists and detailed view of dentists
 
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView
-from .models import Dentist, Appointment, Patient
-from .forms import PatientUpdateAppointmentForm, DentistUpdateAppointmentForm, PatientCreateAppointmentForm, DentistCreateAppointmentForm
+from .models import Dentist, Appointment, Patient, Treatment
+from .forms import PatientUpdateAppointmentForm, DentistUpdateAppointmentForm, PatientCreateAppointmentForm, DentistCreateAppointmentForm, UpdateTreatmentForm
 from django.urls import reverse
 
 class FrontPageView(TemplateView):
@@ -20,21 +20,28 @@ class FrontPageView(TemplateView):
                 patient = Patient.objects.get(profile__user=user)
                 context['user_type'] = 'patient'
                 context['profile'] = patient.profile
-                context['appointments'] = patient.get_appointments()
+                context['appointments'] = patient.get_appointments() # Testing context variable
+                context['new_appointments'] = patient.get_upcoming_appointments()
+                context['past_procedures'] = patient.get_treatment_history()
             except Patient.DoesNotExist:
                 try:
                     dentist = Dentist.objects.get(profile__user=user)
                     context['user_type'] = 'dentist'
                     context['profile'] = dentist.profile
                     context['appointments'] = dentist.get_appointments()
+                    context['new_appointments'] = dentist.get_upcoming_appointments()
+                    context['past_procedures'] = dentist.get_past_procedures()
+                    context['need_updates'] = dentist.get_not_updated_procedures()
                 except Dentist.DoesNotExist: # Should not happen
                     context['user_type'] = 'none'
                     context['profile'] = None
                     context['appointments'] = []
+                    context['new_appointments'] = []
         else:
             context['user_type'] = 'none'
             context['profile'] = None
             context['appointments'] = []
+            context['new_appointments'] = []
         return context
 
 class AboutPageView(TemplateView):
@@ -53,32 +60,27 @@ class ShowDentistPageView(DetailView):
 class ShowAllAppointmentsView(ListView):
     model = Appointment
     template_name = 'project/all_appointments.html'
-    context_object_name = 'appointments'
+    context_object_name = 'appointments'  # This makes the list available as appointments
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-
-        if user.is_authenticated: 
-            try: # Return to check that only patients/dentists can edit their own
-                patient = Patient.objects.get(profile__user=user)
-                context['profile'] = patient.profile
-                context['user_type'] = 'patient'
-            except Patient.DoesNotExist:
-                try:
-                    dentist = Dentist.objects.get(profile__user=user)
-                    context['profile'] = dentist.profile
-                    context['user_type'] = 'dentist'
-
-                except Dentist.DoesNotExist: # Should not happen
-                    context['profile'] = None
-                    context['user_type'] = 'None'
+        
+        if user.is_authenticated:
+            try:
+                dentist = Dentist.objects.get(profile__user=user)
+                context['profile'] = dentist.profile
+                context['new_appointments'] = dentist.get_upcoming_appointments()
+                context['past_procedures'] = dentist.get_past_procedures()
+            except Dentist.DoesNotExist:
+                context['profile'] = None
+                context['new_appointments'] = []
+                context['past_procedures'] = []
         else:
             context['profile'] = None
-            context['user_type'] = 'None'
-
-        context['appointments'] = Appointment.objects.all()
-        return context 
+            context['new_appointments'] = []
+            context['past_procedures'] = []
+        return context
 
 class AppointmentView(DetailView):
     model = Appointment
@@ -167,5 +169,44 @@ class UpdateAppointment(UpdateView):
 
     def get_success_url(self):
         return reverse('view_appointment', kwargs={'pk': self.object.pk})
+    
+class TreatmentView(DetailView):
+    model = Treatment
+    template_name = 'project/treatment.html'
+    context_object_name = 'treatment'
+
+    def get_context_data(self, **kwargs): # Only dentists can update their previous procedure
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        if user.is_authenticated:
+            try:
+                dentist = Dentist.objects.get(profile__user=user)
+                context['user_type'] = 'dentist'
+                context['profile'] = dentist.profile
+            except Dentist.DoesNotExist:
+                context['user_type'] = 'none'
+                context['profile'] = None
+        else:
+            context['user_type'] = 'none'
+            context['profile'] = None
+        return context
+        
+class UpdateTreatment(UpdateView):
+    model = Treatment
+    template_name = "project/update_treatment_form.html"
+
+    def get_form_class(self):
+        return UpdateTreatmentForm
+
+    def get_object(self):
+        treatment = self.kwargs.get('pk') # Get the appointment
+        return Treatment.objects.filter(pk=treatment).first()
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('view_treatment', kwargs={'pk': self.object.pk})
 
 # class CreateProfile(CreateView):

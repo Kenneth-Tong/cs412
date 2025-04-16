@@ -2,10 +2,10 @@
 
 {% block content %}
     <h2>All Appointments</h2>
-    <h3>Welcome Dr. {{profile.last_name}}</h3>
 
-    {% if appointments %}
-        {% for appointment in appointments %}
+    <h3>Upcoming Appointments</h3>
+    {% if new_appointments %}
+        {% for appointment in new_appointments %}
             <h4>{{appointment.start}}</h4>
             {% if appointment.dentist.profile == profile %}
                 <p>Your appointment with patient {{appointment.patient.profile.first_name}} {{appointment.patient.profile.last_name}}</p>
@@ -16,6 +16,25 @@
             <hr>
         {% endfor %}
     {% else %}
-        <p>No appointments available.</p>
+        <p>No new appointments available.</p>
     {% endif %}
+
+    <hr>
+
+    <h3>Previous Treatments</h3>
+    {% if past_procedures %}
+        {% for treatment in past_procedures %}
+            <h4>{{treatment.appointment.start}}</h4>
+            {% if treatment.appointment.dentist.profile == profile %}
+                <p>Your treatment with patient {{treatment.appointment.patient.profile.first_name}} {{treatment.appointment.patient.profile.last_name}}</p>
+            {% else %}
+                <p>Dr. {{treatment.appointment.dentist.profile.last_name}}'s' appointment with {{treatment.appointment.patient.profile.first_name}} {{treatment.appointment.patient.profile.last_name}}</p>
+            {% endif %}
+            <a href="{% url 'view_treatment' pk=treatment.pk %}">View Details</a>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>No new appointments available.</p>
+    {% endif %}
+
 {% endblock %}

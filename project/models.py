@@ -2,6 +2,7 @@
 # Author: Kenneth Tong (ktong22@bu.edu), 4/12/2025
 # Description: Models for the patient and interactions for scheduling and dentists
 
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ValidationError
@@ -22,7 +23,7 @@ class Profile(models.Model):
 # Dentist model
 class Dentist(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="dentist_profile", null=True)
-    specialization = models.TextField(blank=False, default='General')
+    speciality = models.TextField(blank=False, default='General')
     bio = models.TextField(blank=True)
 
     def get_absolute_url(self):
@@ -31,11 +32,30 @@ class Dentist(models.Model):
     def get_appointments(self):
         return Appointment.objects.filter(dentist=self)
     
-    # def get_upcoming_appointments(self, days): # Get next appointments in the next X days
-    
-    # def get_todays_appointments(self): # Get appointments today
+    def get_upcoming_appointments(self): # Get next appointments in the next X days
+        return Appointment.objects.filter(dentist=self, start__gt=timezone.now()).order_by('start')
 
-    # def get_procedures(self): # Get performed appointments
+    # def get_todays_appointments(self): # Get appointments today maybe in graphs
+
+    def get_not_updated_procedures(self):
+        need_updates = []
+        for treatment in Treatment.objects.filter(appointment__dentist=self):
+            if treatment.get_filled():
+                need_updates.append(treatment)
+        return need_updates
+
+    def get_past_procedures(self): # Get performed appointments
+        past_appointments = Appointment.objects.filter(dentist=self, start__lt=timezone.now()) # Get all appointments in the past (from current time)
+
+        for appointment in past_appointments:
+            if not appointment.treatments.exists(): # Automatically created one to one reverse relationship to check if a treatment has this appointment
+                Treatment.objects.create( # Treatment created if not existing
+                    appointment=appointment,
+                    procedure="N/A", # Dentist needs to fill out these other aspects
+                    tooth_number="N/A",
+                    dentist_notes="Auto-generated treatment record"
+                )
+        return Treatment.objects.filter(appointment__dentist=self)
 
     def __str__(self):
         if self.profile: # If no profile set
@@ -54,10 +74,21 @@ class Patient(models.Model):
     def get_appointments(self):
         return Appointment.objects.filter(patient=self)
 
-    # def get_upcoming_appointments(self): # Get next appointments
+    def get_upcoming_appointments(self): # Get next appointments
+        return Appointment.objects.filter(patient=self, start__gt=timezone.now()).order_by('start')
 
-    def get_treatment_history(self):
-        return Treatment.objects.filter(patient=self)
+    def get_treatment_history(self): #  Will check and create treatment histories based on whether an appointment at the time of being called is in the past
+        past_appointments = Appointment.objects.filter(patient=self, start__lt=timezone.now()) # Get all appointments in the past (from current time)
+
+        for appointment in past_appointments:
+            if not appointment.treatments.exists(): # Automatically created one to one reverse relationship to check if a treatment has this appointment
+                Treatment.objects.create( # Treatment created if not existing
+                    appointment=appointment,
+                    procedure="N/A", # Dentist needs to fill out these other aspects
+                    tooth_number="N/A",
+                    dentist_notes="Auto-generated treatment record"
+                )
+        return Treatment.objects.filter(appointment__patient=self)
 
     def __str__(self):
         if self.profile: # If no profile set
@@ -96,13 +127,15 @@ class Appointment(models.Model):
     def clean(self): # Check when appointment is created if the starttime is after endtime OR if appointment times overlap during formvalid() before saving
         if self.start >= self.end:
             raise ValidationError("End time must be later than start time!")
+    
+        if self.start < timezone.now():
+            raise ValidationError("You cannot schedule an appointment in the past.")
         
         overlapping_appointments = Appointment.objects.filter(dentist=self.dentist)
         
         for appointment in overlapping_appointments: # Check if the new appointment overlaps with an existing appointment
             if (self.start < appointment.end and self.end > appointment.start):
                 raise ValidationError("This appointment time overlaps with an existing appointment for this dentist.")
-
     
     def __str__(self):
         if self.patient.profile and self.dentist.profile: # If no profile set
@@ -113,7 +146,12 @@ class Treatment(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='treatments')
     procedure = models.TextField(blank=False)
     tooth_number = models.TextField(blank=False)
-    dentist_notes = models.TextField(blank=True) 
-    
+    dentist_notes = models.TextField(blank=True, default="No notes from dentist yet.")
+
+    def get_filled(self): # If the treatment was filled out by the dentist
+        if self.procedure == 'N/A':
+            return False
+        return True
+
     def __str__(self):
-        return f"{self.procedure} on tooth {self.tooth_number}"
+        return f"{self.appointment}: {self.procedure} on tooth {self.tooth_number}"

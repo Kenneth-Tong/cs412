@@ -6,7 +6,6 @@
 {% else %}
     <p>Your notes: No notes yet.</p>
 {% endif %}
-<p>appointment</p>
 
 {% if appointment.patient.profile == profile %}
     <a href="{% url 'update_appointment' pk=appointment.pk %}" class="btn btn-primary">Update Appointment</a>

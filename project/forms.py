@@ -4,7 +4,7 @@
 # forms, will be used with views.py
 
 from django import forms
-from .models import Appointment
+from .models import Appointment, Treatment
 
 class PatientCreateAppointmentForm(forms.ModelForm):
     class Meta:
@@ -26,3 +26,7 @@ class DentistUpdateAppointmentForm(forms.ModelForm):
         model = Appointment
         exclude = ['patient'] # Dentists can edit everything but patient, they can hand off patients if needed
 
+class UpdateTreatmentForm(forms.ModelForm): # Only dentists can access
+    class Meta:
+        model = Treatment
+        exclude = ['appointment']

@@ -17,9 +17,11 @@ urlpatterns = [
     path('dentists/<int:pk>/', views.ShowDentistPageView.as_view(), name='show_dentist'),
     path('about/', views.AboutPageView.as_view(), name='about'),
     path('all_appointments/', views.ShowAllAppointmentsView.as_view(), name='all_appointments'),
-    path('appointments/<int:pk>/', views.AppointmentView.as_view(), name='view_appointment'),
-    path('appointments/new/', views.MakeAppointment.as_view(), name='make_appointment'),
+    path('appointment/<int:pk>/', views.AppointmentView.as_view(), name='view_appointment'),
+    path('appointment/new/', views.MakeAppointment.as_view(), name='make_appointment'),
     path('appointment/<int:pk>/update', views.UpdateAppointment.as_view(), name='update_appointment'), 
+    path('treatment/<int:pk>/', views.TreatmentView.as_view(), name='view_treatment'), 
+    path('treatment/<int:pk>/update', views.UpdateTreatment.as_view(), name='update_treatment'), 
     path('login/', auth_views.LoginView.as_view(template_name='project/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='project/logged_out.html', next_page='dashboard'), name='logout'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

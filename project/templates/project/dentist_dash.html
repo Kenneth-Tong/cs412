@@ -1,5 +1,5 @@
 <h3>Your Patient Scheduled Appointments:</h3>
-{% if appointments %}
+{% if new_appointments %}
     {% for appointment in appointments %}
         <p>{{appointment.patient.profile.first_name}} {{appointment.patient.profile.last_name}} at {{appointment.start}}</p>
         <a href="{% url 'view_appointment' pk=appointment.pk %}" class="btn btn-primary">View Appointment</a>
@@ -7,4 +7,39 @@
     {% endfor %}
 {% else %} <!-- If appointment is empty list, then display below -->
     <p>You have no scheduled appointments.</p> 
+{% endif %}
+
+<hr>
+
+<h3>Treatment Histories that Require Updates:</h3>
+{% if need_updates %}
+    {% for treatment in need_updates %}
+        <p>
+            Dentist: {{treatment.appointment.dentist}}<br>
+            Date: {{treatment.appointment.start}}<br>
+            Procedure: {{treatment.procedure}}<br>
+            Tooth #: {{treatment.tooth_number}}<br>
+            Dentist notes: {{treatment.dentist_notes}}
+        </p>
+        <a href="{% url 'update_treatment' pk=treatment.pk %}" class="btn btn-primary">View Treatment</a>
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>All treatment histories updated.</p>
+{% endif %}
+
+<hr>
+
+<h3>Previous Procedures:</h3>
+{% if past_procedures %}
+    {% for treatment in past_procedures %}
+        <p>
+            Dentist: {{treatment.appointment.dentist}}<br>
+            Date: {{treatment.appointment.start}}<br>
+        </p>
+        <a href="{% url 'view_treatment' pk=treatment.pk %}" class="btn btn-primary">View Treatment</a>
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>No previous procedures performed.</p>
 {% endif %}
