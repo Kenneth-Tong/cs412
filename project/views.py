@@ -32,6 +32,14 @@ class FrontPageView(TemplateView):
                     context['new_appointments'] = dentist.get_upcoming_appointments()
                     context['past_procedures'] = dentist.get_past_procedures()
                     context['need_updates'] = dentist.get_not_updated_procedures()
+                    context['past_procedures'] = dentist.get_past_procedures()
+                    context['need_updates'] = dentist.get_not_updated_procedures()
+
+                    filtered_procedures = [] # Filter out treatments that need updates
+                    for treatment in context['past_procedures']:
+                        if treatment not in context['need_updates']:
+                            filtered_procedures.append(treatment)
+                    context['past_procedures'] = filtered_procedures
                 except Dentist.DoesNotExist: # Should not happen
                     context['user_type'] = 'none'
                     context['profile'] = None

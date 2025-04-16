@@ -37,10 +37,10 @@ class Dentist(models.Model):
 
     # def get_todays_appointments(self): # Get appointments today maybe in graphs
 
-    def get_not_updated_procedures(self):
+    def get_not_updated_procedures(self): # Dentists need to update once procedures are done and are now previous treatments
         need_updates = []
         for treatment in Treatment.objects.filter(appointment__dentist=self):
-            if treatment.get_filled():
+            if not treatment.get_filled(): # They were not filled out/updated
                 need_updates.append(treatment)
         return need_updates
 
@@ -149,9 +149,7 @@ class Treatment(models.Model):
     dentist_notes = models.TextField(blank=True, default="No notes from dentist yet.")
 
     def get_filled(self): # If the treatment was filled out by the dentist
-        if self.procedure == 'N/A':
-            return False
-        return True
+        return (self.procedure != "N/A" and self.tooth_number != "N/A" and self.dentist_notes != "Auto-generated treatment record")
 
     def __str__(self):
         return f"{self.appointment}: {self.procedure} on tooth {self.tooth_number}"

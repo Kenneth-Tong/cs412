@@ -1,4 +1,4 @@
-<h3>Your Patient Scheduled Appointments:</h3>
+<h3>Your Upcoming Patient Appointments</h3>
 {% if new_appointments %}
     {% for appointment in appointments %}
         <p>{{appointment.patient.profile.first_name}} {{appointment.patient.profile.last_name}} at {{appointment.start}}</p>
@@ -11,15 +11,12 @@
 
 <hr>
 
-<h3>Treatment Histories that Require Updates:</h3>
+<h3>Pending Treatment Updates:</h3>
 {% if need_updates %}
     {% for treatment in need_updates %}
         <p>
             Dentist: {{treatment.appointment.dentist}}<br>
             Date: {{treatment.appointment.start}}<br>
-            Procedure: {{treatment.procedure}}<br>
-            Tooth #: {{treatment.tooth_number}}<br>
-            Dentist notes: {{treatment.dentist_notes}}
         </p>
         <a href="{% url 'update_treatment' pk=treatment.pk %}" class="btn btn-primary">View Treatment</a>
         <hr>
@@ -30,7 +27,7 @@
 
 <hr>
 
-<h3>Previous Procedures:</h3>
+<h3>Completed Treatment Records</h3>
 {% if past_procedures %}
     {% for treatment in past_procedures %}
         <p>
