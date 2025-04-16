@@ -3,7 +3,7 @@
 {% block content %}
     <h2>All Appointments</h2>
 
-    <h3>Upcoming Appointments</h3>
+    <h3>Upcoming Patient Appointments</h3>
     {% if new_appointments %}
         {% for appointment in new_appointments %}
             <h4>{{appointment.start}}</h4>
@@ -12,7 +12,7 @@
             {% else %}
                 <p>Dr. {{appointment.dentist.profile.last_name}}'s' appointment with {{appointment.patient.profile.first_name}} {{appointment.patient.profile.last_name}}</p>
             {% endif %}
-            <a href="{% url 'view_appointment' pk=appointment.pk %}">View Details</a>
+            <a href="{% url 'view_appointment' appointment.pk %}">View Appointment</a>
             <hr>
         {% endfor %}
     {% else %}
@@ -30,7 +30,7 @@
             {% else %}
                 <p>Dr. {{treatment.appointment.dentist.profile.last_name}}'s' appointment with {{treatment.appointment.patient.profile.first_name}} {{treatment.appointment.patient.profile.last_name}}</p>
             {% endif %}
-            <a href="{% url 'view_treatment' pk=treatment.pk %}">View Details</a>
+            <a href="{% url 'view_treatment' treatment.pk %}">View Treatment</a>
             <hr>
         {% endfor %}
     {% else %}

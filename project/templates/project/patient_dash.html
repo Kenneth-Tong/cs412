@@ -1,9 +1,8 @@
-<h3>Your Appointments:</h4>
+<h2>Your Appointments</h2>
 {% if new_appointments %}
     {% for appointment in new_appointments %}
         <p>{{appointment.dentist.profile.first_name}} {{appointment.dentist.profile.last_name}} at {{appointment.start}}</p>
         <a href="{% url 'view_appointment' pk=appointment.pk %}" class="btn btn-primary">View Appointment</a>
-        <hr>
     {% endfor %}
 {% else %} <!-- If appointment is empty list, then display below -->
     <p>You have no upcoming appointments.</p> 
@@ -11,7 +10,7 @@
 
 <hr>
 
-<h3>Treatments You Received:</h3>
+<h2>Treatments You Received</h2>
 {% if past_procedures %}
     {% for treatment in past_procedures %}
         <p>
@@ -19,7 +18,6 @@
             Date: {{treatment.appointment.start}} <br>
         </p>
         <a href="{% url 'view_treatment' pk=treatment.pk %}" class="btn btn-primary">View Treatment</a>
-        <hr>
     {% endfor %}
 {% else %}
     <p>No previous treatment history.</p>
