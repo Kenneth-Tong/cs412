@@ -5,10 +5,9 @@
 from django.contrib import admin
 
 # Register your models here
-from .models import Profile, Patient, Dentist, Appointment, Treatment, BlockedTime
+from .models import Patient, Dentist, Appointment, BlockedTime, Treatment
 
 admin.site.register(Patient)
-admin.site.register(Profile)
 admin.site.register(Dentist)
 admin.site.register(Appointment)
 admin.site.register(BlockedTime)

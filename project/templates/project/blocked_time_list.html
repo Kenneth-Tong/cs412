@@ -6,7 +6,7 @@
     <main class="grid-container">
         {% for blocked_time in blocked_times %}
         <article>
-            <p>Dentist: Dr. {{blocked_time.dentist.profile.first_name}} {{blocked_time.dentist.profile.last_name}}</p>
+            <p>Dentist: Dr. {{blocked_time.dentist.first_name}} {{blocked_time.dentist.last_name}}</p>
             <p>Start Time: {{blocked_time.start}}</p>
             <p>End Time: {{blocked_time.end}}</p>
             {% if blocked_time.reason %}

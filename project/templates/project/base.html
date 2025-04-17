@@ -32,8 +32,8 @@
                 </form>
             {% else %} <!-- URLs for users who are not logged in -->
                 <a href="{% url 'login' %}">Login</a> |
-                <a href="{% url 'make_patient' %}">Create Patient Account</a> |
-                <a href="{% url 'make_dentist' %}">Create Dentist Account</a>
+                <a href="{% url 'make_profile' %}?type=patient">Create Patient Account</a> |
+                <a href="{% url 'make_profile' %}?type=dentist">Create Dentist Account</a>
             {% endif %}
         </nav>
         <hr>

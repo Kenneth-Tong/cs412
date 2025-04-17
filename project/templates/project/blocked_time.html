@@ -3,7 +3,7 @@
 {% block content %}
     <h2>Blocked Time Details</h2>
 
-    <p>Dentist: Dr. {{blocked_time.dentist.profile.first_name}} {{blocked_time.dentist.profile.last_name}}</p>
+    <p>Dentist: Dr. {{blocked_time.dentist.first_name}} {{blocked_time.dentist.last_name}}</p>
     <p>Start Time: {{blocked_time.start}}</p>
     <p>End Time: {{blocked_time.end}}</p>
     {% if blocked_time.reason %}

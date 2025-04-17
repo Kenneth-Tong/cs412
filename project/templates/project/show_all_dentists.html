@@ -8,12 +8,12 @@
         {% for dentist in dentists %}
         <article>
             <div> <!-- Access the person in the for looping through the list of Profiles -->
-                <h2>Dr. {{dentist.profile.first_name}} {{dentist.profile.last_name}}</h2>
+                <h2>Dr. {{dentist.first_name}} {{dentist.last_name}}</h2>
             </div>
 
-            {% if dentist.profile.image_file %} <!-- If there is an image assocaited with the Dentist, display it as a clickable link -->
+            {% if dentist.image_file %} <!-- If there is an image assocaited with the Dentist, display it as a clickable link -->
                 <a href="{% url 'show_dentist' pk=dentist.pk %}">
-                <img src="{{dentist.profile.image_file.url}}" alt="{{dentist.profile.image_file.url}}"
+                <img src="{{dentist.image_file.url}}" alt="{{dentist.image_file.url}}"
                 width="200">
             </a>
             {% endif %}

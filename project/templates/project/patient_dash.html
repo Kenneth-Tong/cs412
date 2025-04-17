@@ -1,7 +1,7 @@
 <h2>Your Appointments</h2>
 {% if new_appointments %}
     {% for appointment in new_appointments %}
-        <p>{{appointment.dentist.profile.first_name}} {{appointment.dentist.profile.last_name}} at {{appointment.start}}</p>
+        <p>Dr. {{appointment.dentist.first_name}} {{appointment.dentist.last_name}} at {{appointment.start}}</p>
         <a href="{% url 'view_appointment' pk=appointment.pk %}" class="btn btn-primary">View Appointment</a>
     {% endfor %}
 {% else %} <!-- If appointment is empty list, then display below -->

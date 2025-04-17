@@ -1,7 +1,7 @@
 # File: models.py
 # Author: Kenneth Tong (ktong22@bu.edu), 4/12/2025
 # Description: Models for the patient and interactions for scheduling and dentists
-
+# 
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
@@ -14,15 +14,14 @@ class Profile(models.Model):
     first_name = models.TextField(blank=False)
     last_name = models.TextField(blank=False)
     phone = models.TextField(blank=False)
-    address = models.TextField(blank=False)
+    email = models.TextField(blank=False)
     image_file = models.ImageField(blank=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
 # Dentist model
-class Dentist(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="dentist_profile", null=True)
+class Dentist(Profile):
     speciality = models.TextField(blank=False, default='General')
     bio = models.TextField(blank=True)
     
@@ -53,13 +52,10 @@ class Dentist(models.Model):
         return Treatment.objects.filter(appointment__dentist=self)
 
     def __str__(self):
-        if self.profile: # If no profile set
-            return f"Dr. {self.profile.first_name} {self.profile.last_name}"
-        return "Unnamed Dentist"
+        return f"Dr. {self.first_name} {self.last_name}"
 
 # Patient model
-class Patient(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="patient_profile", null=True)
+class Patient(Profile):
     insurance_provider = models.TextField(blank=False)
     date_of_birth = models.DateField()
     
@@ -83,9 +79,7 @@ class Patient(models.Model):
         return Treatment.objects.filter(appointment__patient=self)
 
     def __str__(self):
-        if self.profile: # If no profile set
-            return f"{self.profile.first_name} {self.profile.last_name}"
-        return "Unnamed Patient"
+        return f"{self.first_name} {self.last_name}"
 
 # Blocked time for dentist
 class BlockedTime(models.Model): # If dentist is not in the office at this time
@@ -115,41 +109,35 @@ class Appointment(models.Model): # Appointments that go into the schedule for a 
                 return True
         return False
     
-    def clean(self): # Check when appointment is created if the starttime is after endtime OR if appointment times overlap during formvalid() before saving
+    def clean(self):
+        # Ensure the start and end times are valid
         if self.start >= self.end:
             raise ValidationError("End time must be later than start time!")
-    
-        if self.start < timezone.now():
-            raise ValidationError("You cannot schedule an appointment in the past.")
         
-        # Check that end time is after start time
-        if self.start >= self.end:
-            raise ValidationError("End time must be later than start time!")
-
         # Prevent scheduling in the past
         if self.start < timezone.now():
             raise ValidationError("You cannot schedule an appointment in the past.")
 
-        # Check dentist's appointments
+        # Check dentist's appointments for overlap
         overlapping_dentist_appointments = Appointment.objects.filter(dentist=self.dentist)
         for appointment in overlapping_dentist_appointments:
-            if self.start < appointment.end and self.end > appointment.start:
-                raise ValidationError("This appointment overlaps with another appointment for this dentist.")
+            if appointment != self:  # Exclude the current instance
+                if self.start < appointment.end and self.end > appointment.start:
+                    raise ValidationError("This appointment overlaps with another appointment for this dentist.")
 
-        # Check patient's appointments
+        # Check patient's appointments for overlap
         overlapping_patient_appointments = Appointment.objects.filter(patient=self.patient)
         for appointment in overlapping_patient_appointments:
-            if self.start < appointment.end and self.end > appointment.start:
-                raise ValidationError("This appointment overlaps with an existing patient appointment have.")
+            if appointment != self:  # Exclude the current instance
+                if self.start < appointment.end and self.end > appointment.start:
+                    raise ValidationError("This appointment overlaps with an existing patient appointment.")
 
         # Check if the appointment overlaps with the dentist's blocked time
         if self.overlaps_blocked_time():
             raise ValidationError("The dentist is not available at this time.")
-                
-        def __str__(self):
-            if self.patient.profile and self.dentist.profile: # If no profile set
-                return f"{self.patient} with {self.dentist} at {self.start}"
-            return f"Unassigned personel"
+        
+    def __str__(self):
+        return f"{self.patient} with {self.dentist} at {self.start}"
 
 # Treatments
 class Treatment(models.Model): # Appointments that are completed become treatment (for treatment history)

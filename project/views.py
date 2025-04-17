@@ -5,7 +5,7 @@
 
 from django.forms import ValidationError
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView
-from .models import Dentist, Appointment, Patient, Treatment, BlockedTime
+from .models import Dentist, Appointment, Patient, Treatment, Profile
 from .forms import *
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -23,13 +23,13 @@ class CheckProfile(): # Returning if the user if logged in is a patient or denti
 
         if user.is_authenticated: 
             try: # Return to check that only patients/dentists can edit their own
-                patient = Patient.objects.get(profile__user=user)
-                context['profile'] = patient.profile
+                patient = Patient.objects.get(user=user)
+                context['profile'] = patient
                 context['user_type'] = 'patient'
             except Patient.DoesNotExist:
                 try:
-                    dentist = Dentist.objects.get(profile__user=user)
-                    context['profile'] = dentist.profile
+                    dentist = Dentist.objects.get(user=user)
+                    context['profile'] = dentist
                     context['user_type'] = 'dentist'
 
                 except Dentist.DoesNotExist: # Should not happen
@@ -49,17 +49,13 @@ class FrontPageView(CheckProfile, TemplateView):
 
         if user.is_authenticated: 
             try: # Check if user has a related Patient or Dentist profile
-                patient = Patient.objects.get(profile__user=user) # If patient, there will be no need to update treatments, only dentists do so it does not have the field
-                context['user_type'] = 'patient' # User is Patient
-                context['profile'] = patient.profile # Get the profile of the patient
+                patient = Patient.objects.get(user=user) # If patient, there will be no need to update treatments, only dentists do so it does not have the field
                 context['appointments'] = patient.get_appointments() # Testing context variable
                 context['new_appointments'] = patient.get_upcoming_appointments() # Future appointments
                 context['past_procedures'] = patient.get_treatment_history() # Appointments that have already happened (in relation to current time)
             except Patient.DoesNotExist:
                 try:
-                    dentist = Dentist.objects.get(profile__user=user)
-                    context['user_type'] = 'dentist'
-                    context['profile'] = dentist.profile
+                    dentist = Dentist.objects.get(user=user)
                     context['appointments'] = dentist.get_appointments()
                     context['new_appointments'] = dentist.get_upcoming_appointments()
                     context['past_procedures'] = dentist.get_past_procedures()
@@ -74,14 +70,10 @@ class FrontPageView(CheckProfile, TemplateView):
                     context['past_procedures'] = filtered_procedures
 
                 except Dentist.DoesNotExist: # Should not happen
-                    context['user_type'] = 'none'
-                    context['profile'] = None
                     context['appointments'] = []
                     context['new_appointments'] = []
                     context['past_procedures'] = []
         else:
-            context['user_type'] = 'none'
-            context['profile'] = None
             context['appointments'] = []
             context['new_appointments'] = []
             context['past_procedures'] = []
@@ -114,8 +106,8 @@ class ShowAllAppointmentsView(CheckProfile, CustomLoginMixin, ListView):
         
         if user.is_authenticated:
             try:
-                dentist = Dentist.objects.get(profile__user=user)
-                context['profile'] = dentist.profile
+                dentist = Dentist.objects.get(user=user)
+                context['profile'] = dentist
                 context['user_type'] = 'dentist'
                 context['new_appointments'] = []
                 context['past_procedures'] = []
@@ -151,25 +143,24 @@ class MakeAppointment(CheckProfile, CustomLoginMixin, CreateView):
 
     def get_form_class(self):
         user = self.request.user
-        if Patient.objects.filter(profile__user=user).exists():
+        if Patient.objects.filter(user=user).exists():
             return PatientCreateAppointmentForm
-        elif Dentist.objects.filter(profile__user=user).exists():
+        elif Dentist.objects.filter(user=user).exists():
             return DentistCreateAppointmentForm
         return super().get_form_class()
+    
+    def get_form(self, form_class=None): # Set the instances of patient and dentist before clean checks it before form_valid
+        form = super().get_form(form_class)
+
+        user = self.request.user
+        if Patient.objects.filter(user=user).exists():
+            form.instance.patient = Patient.objects.filter(user=user).first()
+        elif Dentist.objects.filter(user=user).exists():
+            form.instance.dentist = Dentist.objects.filter(user=user).first()
+
+        return form
 
     def form_valid(self, form):
-        user = self.request.user
-
-        # If user is a patient, assign them as the patient
-        patient = Patient.objects.filter(profile__user=user).first()
-        if patient:
-            form.instance.patient = patient
-
-        # If user is a dentist, assign them as the dentist
-        dentist = Dentist.objects.filter(profile__user=user).first()
-        if dentist:
-            form.instance.dentist = dentist
-
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -182,9 +173,9 @@ class UpdateAppointment(CheckProfile, CustomLoginMixin, UpdateView):
 
     def get_form_class(self):
         user = self.request.user
-        if Patient.objects.filter(profile__user=user).exists():
+        if Patient.objects.filter(user=user).exists():
             return PatientUpdateAppointmentForm
-        elif Dentist.objects.filter(profile__user=user).exists():
+        elif Dentist.objects.filter(user=user).exists():
             return DentistUpdateAppointmentForm
         return super().get_form_class()
     
@@ -192,8 +183,8 @@ class UpdateAppointment(CheckProfile, CustomLoginMixin, UpdateView):
         user = self.request.user
 
         # If user is a patient, ensure that the patient is not changed
-        if Patient.objects.filter(profile__user=user).exists():
-            form.instance.patient = Patient.objects.get(profile__user=user)
+        if Patient.objects.filter(user=user).exists():
+            form.instance.patient = Patient.objects.get(user=user)
 
         return super().form_valid(form)
 
@@ -245,113 +236,65 @@ class ProfileView(CheckProfile, CustomLoginMixin, DetailView):
 
         if user.is_authenticated:
             if context['user_type'] == 'dentist':
-                dentist = Dentist.objects.get(profile__user=user)
+                dentist = Dentist.objects.get(user=user)
                 context['dentist'] = dentist
             elif context['user_type'] == 'patient':
-                patient = Patient.objects.get(profile__user=user)
+                patient = Patient.objects.get(user=user)
                 context['patient'] = patient
         return context
 
 
-class CreatePatientView(CreateView):
-    form_class = CreateProfileForm
-    template_name = "project/create_patient_form.html"
+class CreateProfileView(CreateView):
+    template_name = "project/create_profile_form.html"
+    
+    def get_form_class(self):
+        user_type = self.request.GET.get('type')
+        if user_type == 'patient':
+            return CreatePatientForm
+        elif user_type == 'dentist':
+            return CreateDentistForm
+        
+        return super().get_form_class()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['user_form'] = UserCreationForm()
-        context['patient_form'] = CreatePatientForm()
         return context
     
     def form_valid(self, form):
         user_form = UserCreationForm(self.request.POST)
-        patient_form = CreatePatientForm(self.request.POST)
-
-        if user_form.is_valid() and patient_form.is_valid():
-            user = user_form.save() # User saved
-
-            profile = form.save(commit=False)
-            profile.user = user
-            profile.save() # Save profile
-
-            patient = patient_form.save(commit=False)
-            patient.profile = profile
-            patient.save() # Save patient
-
-            login(self.request, user)
-
-            return super().form_valid(form)   
-            
-        else:
-            print("User form errors:", user_form.errors)
-            print("Patient form errors:", patient_form.errors)
-            print("Profile form errors:", form.errors)
+        user = user_form.save()
+        
+        form.instance.user = user # Attach the user to the profile
+        
+        login(self.request, user)
+        
+        return super().form_valid(form) # Saving form
   
     def get_success_url(self):
         return reverse('dashboard')
 
-
-class CreateDentistView(CreateView):
-    form_class = CreateProfileForm
-    template_name = "project/create_dentist_form.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['user_form'] = UserCreationForm()
-        context['dentist_form'] = CreateDentistForm()
-        return context
-    
-    def form_valid(self, form):
-        user_form = UserCreationForm(self.request.POST)
-        dentist_form = CreateDentistForm(self.request.POST)
-
-        if user_form.is_valid() and dentist_form.is_valid():
-            user = user_form.save() # User saved
-
-            profile = form.save(commit=False)
-            profile.user = user
-            profile.save() # Save profile
-
-            dentist = dentist_form.save(commit=False)
-            dentist.profile = profile
-            dentist.save() # Save dentist
-
-            login(self.request, user)
-
-            return super().form_valid(form)   
-            
-        else:
-            print("User form errors:", user_form.errors)
-            print("Dentist form errors:", dentist_form.errors)
-            print("Profile form errors:", form.errors)
-  
-    def get_success_url(self):
-        return reverse('dashboard')
-    
 
 class UpdateProfile(CheckProfile, CustomLoginMixin, UpdateView):
-    model = Profile
     template_name = "project/update_profile_form.html"
 
     def get_form_class(self):
-        return UpdateProfileForm
+        user_type = self.request.GET.get('type')
+        if user_type == 'dentist':
+            return UpdateDentistForm
+        return UpdatePatientForm # Default
 
     def get_object(self):
-        profile = self.kwargs.get('pk') # Get the profile
-        return Profile.objects.filter(pk=profile).first()
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        user = self.request.user
-
+        user = self.request.user # Get the patient/dentist instance using the user's profile
         if user.is_authenticated:
-            if context['user_type'] == 'dentist':
-                dentist = Dentist.objects.get(profile__user=user)
-                context['dentist_form'] = UpdateDentistForm(instance=dentist) # Providing the instance of the dentist to edit
-            elif context['user_type'] == 'patient':
-                patient = Patient.objects.get(profile__user=user)
-                context['patient_form'] = UpdatePatientForm(instance=patient) # Providing the instance of the patient to edit
-        return context
+            try:
+                return Patient.objects.get(user=user)
+            except Patient.DoesNotExist:
+                try:
+                    return Dentist.objects.get(user=user)
+                except Dentist.DoesNotExist:
+                    return None  # Handle case where no dentists exists for this user
+        return None
 
     def form_valid(self, form):
         return super().form_valid(form)
@@ -380,7 +323,7 @@ class CreateBlockedTimeView(CheckProfile, CustomLoginMixin, CreateView):
     def form_valid(self, form):
         user = self.request.user
 
-        dentist = Dentist.objects.filter(profile__user=user).first() # Set dentist to form
+        dentist = Dentist.objects.filter(user=user).first() # Set dentist to form
         if dentist:
             form.instance.dentist = dentist
 
@@ -404,3 +347,4 @@ class UpdateBLockedTimeView(CheckProfile, CustomLoginMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('blocked_time_view', kwargs={'pk': self.object.pk})
+    

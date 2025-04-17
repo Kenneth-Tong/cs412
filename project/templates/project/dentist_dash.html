@@ -1,7 +1,7 @@
 <h2>Your Upcoming Patient Appointments</h2>
 {% if new_appointments %}
     {% for appointment in appointments %}
-        <p>{{appointment.patient.profile.first_name}} {{appointment.patient.profile.last_name}} at {{appointment.start}}</p>
+        <p>{{appointment.patient.first_name}} {{appointment.patient.last_name}} at {{appointment.start}}</p>
         <a href="{% url 'view_appointment' pk=appointment.pk %}" class="btn btn-primary">View Appointment</a>
     {% endfor %}
 {% else %} <!-- If appointment is empty list, then display below -->
@@ -14,7 +14,7 @@
 {% if need_updates %}
     {% for treatment in need_updates %}
         <p>
-            Patient: {{treatment.appointment.patient.profile.first_name}} {{treatment.appointment.patient.profile.last_name}} <br>
+            Patient: {{treatment.appointment.patient.first_name}} {{treatment.appointment.patient.last_name}} <br>
             Date: {{treatment.appointment.start}}<br>
         </p>
         <a href="{% url 'update_treatment' pk=treatment.pk %}" class="btn btn-primary">View Treatment</a>
@@ -29,7 +29,7 @@
 {% if past_procedures %}
     {% for treatment in past_procedures %}
         <p>
-            Patient: {{treatment.appointment.patient.profile.first_name}} {{treatment.appointment.patient.profile.last_name}} <br>
+            Patient: {{treatment.appointment.patient.first_name}} {{treatment.appointment.patient.last_name}} <br>
             Date: {{treatment.appointment.start}}<br>
         </p>
         <a href="{% url 'view_treatment' pk=treatment.pk %}" class="btn btn-primary">View Treatment</a>

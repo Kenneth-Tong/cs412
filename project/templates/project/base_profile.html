@@ -8,16 +8,16 @@
     <img src="{{profile.image_file.url}}" alt="Profile Image" class="profile-img">
     <h3>{{profile.first_name}} {{profile.last_name}}</h3>
     <p>Phone: {{profile.phone}}</p>
-    <p>Address: {{profile.address}}</p>
+    <p>Email: {{profile.email}}</p>
 
     {% if user_type == 'dentist' %}
         <p>Specialty: {{dentist.speciality}}</p>
         <p>Bio: {{dentist.bio}}</p>
-        <a href="{% url 'update_profile' profile.pk %}" class="btn btn-primary">Edit Profile</a>
+        <a href="{% url 'update_profile' pk=profile.pk %}?type=dentist">Update Your Account</a>
     {% elif user_type == 'patient' %}
         <p>Insurance Provider: {{patient.insurance_provider}}</p>
         <p>Date of Birth: {{patient.date_of_birth}}</p>
-        <a href="{% url 'update_profile' profile.pk %}" class="btn btn-primary">Edit Profile</a>
+        <a href="{% url 'update_profile' pk=profile.pk %}?type=patient">Update Your Account</a>
     {% endif %}
 
 {% endblock %}

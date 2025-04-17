@@ -7,13 +7,12 @@
     {% if new_appointments %}
         {% for appointment in new_appointments %}
             <h4>{{appointment.start}}</h4>
-            {% if appointment.dentist.profile == profile %}
-                <p>Your appointment with patient {{appointment.patient.profile.first_name}} {{appointment.patient.profile.last_name}}</p>
+            {% if appointment.dentist == profile %}
+                <p>Your appointment with patient {{appointment.patient.first_name}} {{appointment.patient.last_name}}</p>
             {% else %}
-                <p>Dr. {{appointment.dentist.profile.last_name}}'s' appointment with {{appointment.patient.profile.first_name}} {{appointment.patient.profile.last_name}}</p>
+                <p>Dr. {{appointment.dentist.last_name}}'s' appointment with {{appointment.patient.first_name}} {{appointment.patient.last_name}}</p>
             {% endif %}
             <a href="{% url 'view_appointment' appointment.pk %}">View Appointment</a>
-            <hr>
         {% endfor %}
     {% else %}
         <p>No new appointments available.</p>
@@ -25,13 +24,12 @@
     {% if past_procedures %}
         {% for treatment in past_procedures %}
             <h4>{{treatment.appointment.start}}</h4>
-            {% if treatment.appointment.dentist.profile == profile %}
-                <p>Your treatment with patient {{treatment.appointment.patient.profile.first_name}} {{treatment.appointment.patient.profile.last_name}}</p>
+            {% if treatment.appointment.dentist == profile %}
+                <p>Your treatment with patient {{treatment.appointment.patient.first_name}} {{treatment.appointment.patient.last_name}}</p>
             {% else %}
-                <p>Dr. {{treatment.appointment.dentist.profile.last_name}}'s' appointment with {{treatment.appointment.patient.profile.first_name}} {{treatment.appointment.patient.profile.last_name}}</p>
+                <p>Dr. {{treatment.appointment.dentist.last_name}}'s' appointment with {{treatment.appointment.patient.first_name}} {{treatment.appointment.patient.last_name}}</p>
             {% endif %}
             <a href="{% url 'view_treatment' treatment.pk %}">View Treatment</a>
-            <hr>
         {% endfor %}
     {% else %}
         <p>No new appointments available.</p>

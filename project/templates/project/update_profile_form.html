@@ -7,19 +7,10 @@
 <!-- display the HTML form -->
 <form action="{% url 'update_profile' profile.pk %}" method="POST">
     {% csrf_token %}
+    
     <table>
         {{form.as_table}}
     </table>
-    
-    {% if user_type == 'dentist' %}
-        <table>
-            {{dentist_form.as_table}}
-        </table>
-    {% elif user_type == 'patient' %}
-        <table>
-            {{patient_form.as_table}}
-        </table>
-    {% endif %}
 
     <input type="submit" name="submit" value="Submit">
 </form>
