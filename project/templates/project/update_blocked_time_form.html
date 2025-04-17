@@ -1,0 +1,19 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h2>Blocked Time Information</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    {% csrf_token %}
+    <table>
+        {{form.as_table}}
+    </table>
+    
+    <input type="submit" value="Update Blocked Time" class="btn btn-primary">
+</form>
+<form action="{% url 'blocked_time_list' %}" method="GET">
+    <input type="submit" value="Cancel">
+</form>
+{% endblock %}

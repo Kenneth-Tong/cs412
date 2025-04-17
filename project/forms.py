@@ -4,7 +4,7 @@
 # forms, will be used with views.py
 
 from django import forms
-from .models import Appointment, Treatment, Profile, Patient, Dentist
+from .models import Appointment, Treatment, Profile, Patient, Dentist, BlockedTime
 
 class PatientCreateAppointmentForm(forms.ModelForm):
     class Meta:
@@ -62,3 +62,13 @@ class UpdateDentistForm(forms.ModelForm):
     class Meta:
         model = Dentist
         exclude = ['profile']
+
+class CreateBlockedTimesForm(forms.ModelForm):
+    class Meta:
+        model = BlockedTime
+        exclude = ['dentist']
+
+class UpdateBlockedTimesForm(forms.ModelForm):
+    class Meta:
+        model = BlockedTime
+        exclude = ['dentist'] # Dentists can change their own times/reason

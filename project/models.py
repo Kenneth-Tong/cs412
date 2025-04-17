@@ -25,17 +25,12 @@ class Dentist(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="dentist_profile", null=True)
     speciality = models.TextField(blank=False, default='General')
     bio = models.TextField(blank=True)
-
-    def get_absolute_url(self):
-        return reverse('dentists', kwargs={'pk': self.pk})
     
     def get_appointments(self):
         return Appointment.objects.filter(dentist=self)
     
     def get_upcoming_appointments(self): # Get next appointments in the next X days
         return Appointment.objects.filter(dentist=self, start__gt=timezone.now()).order_by('start')
-
-    # def get_todays_appointments(self): # Get appointments today maybe in graphs
 
     def get_not_updated_procedures(self): # Dentists need to update once procedures are done and are now previous treatments
         need_updates = []
@@ -67,9 +62,6 @@ class Patient(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="patient_profile", null=True)
     insurance_provider = models.TextField(blank=False)
     date_of_birth = models.DateField()
-
-    def get_absolute_url(self):
-        return reverse('show_profile', kwargs={'pk': self.pk})
     
     def get_appointments(self):
         return Appointment.objects.filter(patient=self)
@@ -95,7 +87,8 @@ class Patient(models.Model):
             return f"{self.profile.first_name} {self.profile.last_name}"
         return "Unnamed Patient"
 
-class BlockedTime(models.Model):
+# Blocked time for dentist
+class BlockedTime(models.Model): # If dentist is not in the office at this time
     dentist = models.ForeignKey(Dentist, on_delete=models.CASCADE, related_name='blocked_times')
     start = models.DateTimeField()
     end = models.DateTimeField()
@@ -104,15 +97,13 @@ class BlockedTime(models.Model):
     def __str__(self):
         return f"Blocked: {self.start} to {self.end}"
 
-class Appointment(models.Model):
+# Appointments
+class Appointment(models.Model): # Appointments that go into the schedule for a dentist
     dentist = models.ForeignKey(Dentist, on_delete=models.CASCADE, related_name='appointments')
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments')
     start = models.DateTimeField()
     end = models.DateTimeField()
     notes = models.TextField(blank=True)
-    
-    def get_absolute_url(self):
-        return reverse('appointment_detail', kwargs={'pk': self.pk})
     
     def duration(self): # Minutes lasting
         return (self.end - self.start).total_seconds() / 60
@@ -131,18 +122,37 @@ class Appointment(models.Model):
         if self.start < timezone.now():
             raise ValidationError("You cannot schedule an appointment in the past.")
         
-        overlapping_appointments = Appointment.objects.filter(dentist=self.dentist)
-        
-        for appointment in overlapping_appointments: # Check if the new appointment overlaps with an existing appointment
-            if (self.start < appointment.end and self.end > appointment.start):
-                raise ValidationError("This appointment time overlaps with an existing appointment for this dentist.")
-    
-    def __str__(self):
-        if self.patient.profile and self.dentist.profile: # If no profile set
-            return f"{self.patient} with {self.dentist} at {self.start}"
-        return f"Unassigned personel"
+        # Check that end time is after start time
+        if self.start >= self.end:
+            raise ValidationError("End time must be later than start time!")
 
-class Treatment(models.Model):
+        # Prevent scheduling in the past
+        if self.start < timezone.now():
+            raise ValidationError("You cannot schedule an appointment in the past.")
+
+        # Check dentist's appointments
+        overlapping_dentist_appointments = Appointment.objects.filter(dentist=self.dentist)
+        for appointment in overlapping_dentist_appointments:
+            if self.start < appointment.end and self.end > appointment.start:
+                raise ValidationError("This appointment overlaps with another appointment for this dentist.")
+
+        # Check patient's appointments
+        overlapping_patient_appointments = Appointment.objects.filter(patient=self.patient)
+        for appointment in overlapping_patient_appointments:
+            if self.start < appointment.end and self.end > appointment.start:
+                raise ValidationError("This appointment overlaps with an existing patient appointment have.")
+
+        # Check if the appointment overlaps with the dentist's blocked time
+        if self.overlaps_blocked_time():
+            raise ValidationError("The dentist is not available at this time.")
+                
+        def __str__(self):
+            if self.patient.profile and self.dentist.profile: # If no profile set
+                return f"{self.patient} with {self.dentist} at {self.start}"
+            return f"Unassigned personel"
+
+# Treatments
+class Treatment(models.Model): # Appointments that are completed become treatment (for treatment history)
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='treatments')
     procedure = models.TextField(blank=False)
     tooth_number = models.TextField(blank=False)

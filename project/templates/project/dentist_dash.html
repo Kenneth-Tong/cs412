@@ -10,11 +10,11 @@
 
 <hr>
 
-<h2>Pending Treatment Updates</h2>
+<h2>Your Pending Treatment Updates</h2>
 {% if need_updates %}
     {% for treatment in need_updates %}
         <p>
-            Dentist: {{treatment.appointment.dentist}}<br>
+            Patient: {{treatment.appointment.patient.profile.first_name}} {{treatment.appointment.patient.profile.last_name}} <br>
             Date: {{treatment.appointment.start}}<br>
         </p>
         <a href="{% url 'update_treatment' pk=treatment.pk %}" class="btn btn-primary">View Treatment</a>
@@ -29,7 +29,7 @@
 {% if past_procedures %}
     {% for treatment in past_procedures %}
         <p>
-            Dentist: {{treatment.appointment.dentist}}<br>
+            Patient: {{treatment.appointment.patient.profile.first_name}} {{treatment.appointment.patient.profile.last_name}} <br>
             Date: {{treatment.appointment.start}}<br>
         </p>
         <a href="{% url 'view_treatment' pk=treatment.pk %}" class="btn btn-primary">View Treatment</a>

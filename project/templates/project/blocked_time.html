@@ -1,0 +1,17 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+    <h2>Blocked Time Details</h2>
+
+    <p>Dentist: Dr. {{blocked_time.dentist.profile.first_name}} {{blocked_time.dentist.profile.last_name}}</p>
+    <p>Start Time: {{blocked_time.start}}</p>
+    <p>End Time: {{blocked_time.end}}</p>
+    {% if blocked_time.reason %}
+        <p>Your Notes: {{blocked_time.reason}}</p>
+    {% else %}
+        <p>Your notes: No reason provided.</p>
+    {% endif %}
+
+    <a href="{% url 'update_blocked_time' pk=blocked_time.pk %}" class="btn btn-primary">Update Blocked Time</a>
+
+{% endblock %}

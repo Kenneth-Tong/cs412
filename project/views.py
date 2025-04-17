@@ -5,7 +5,7 @@
 
 from django.forms import ValidationError
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView
-from .models import Dentist, Appointment, Patient, Treatment
+from .models import Dentist, Appointment, Patient, Treatment, BlockedTime
 from .forms import *
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -204,6 +204,7 @@ class UpdateAppointment(CheckProfile, CustomLoginMixin, UpdateView):
     def get_success_url(self):
         return reverse('view_appointment', kwargs={'pk': self.object.pk})
     
+
 class TreatmentView(CheckProfile, CustomLoginMixin, DetailView):
     model = Treatment
     template_name = 'project/treatment.html'
@@ -250,6 +251,7 @@ class ProfileView(CheckProfile, CustomLoginMixin, DetailView):
                 patient = Patient.objects.get(profile__user=user)
                 context['patient'] = patient
         return context
+
 
 class CreatePatientView(CreateView):
     form_class = CreateProfileForm
@@ -356,3 +358,49 @@ class UpdateProfile(CheckProfile, CustomLoginMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('view_profile', kwargs={'pk': self.object.pk})
+    
+
+class BlockedTimeListView(CheckProfile, CustomLoginMixin, ListView):
+    model = BlockedTime
+    template_name = 'project/blocked_time_list.html'
+    context_object_name = 'blocked_times'
+
+
+class BlockedTimeView(CheckProfile, CustomLoginMixin, DetailView):
+    model = BlockedTime
+    template_name = 'project/blocked_time.html'
+    context_object_name = 'blocked_time'
+
+
+class CreateBlockedTimeView(CheckProfile, CustomLoginMixin, CreateView):
+    model = BlockedTime
+    template_name = 'project/create_blocked_time.html'
+    form_class = CreateBlockedTimesForm
+
+    def form_valid(self, form):
+        user = self.request.user
+
+        dentist = Dentist.objects.filter(profile__user=user).first() # Set dentist to form
+        if dentist:
+            form.instance.dentist = dentist
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('blocked_time_view', kwargs={'pk': self.object.pk})
+
+
+class UpdateBLockedTimeView(CheckProfile, CustomLoginMixin, UpdateView):
+    model = BlockedTime
+    template_name = "project/update_blocked_time_form.html"
+    form_class = UpdateBlockedTimesForm
+
+    def get_object(self):
+        blocked_time = self.kwargs.get('pk') # Get the blocked time
+        return BlockedTime.objects.filter(pk=blocked_time).first()
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('blocked_time_view', kwargs={'pk': self.object.pk})

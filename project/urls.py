@@ -26,6 +26,10 @@ urlpatterns = [
     path('appointment/<int:pk>/update', views.UpdateAppointment.as_view(), name='update_appointment'), 
     path('treatment/<int:pk>/', views.TreatmentView.as_view(), name='view_treatment'), 
     path('treatment/<int:pk>/update', views.UpdateTreatment.as_view(), name='update_treatment'), 
+    path('block_time_list/', views.BlockedTimeListView.as_view(), name='blocked_time_list'),
+    path('block_time/<int:pk>/', views.BlockedTimeView.as_view(), name='blocked_time_view'),
+    path('block_time/<int:pk>/update', views.UpdateBLockedTimeView.as_view(), name='update_blocked_time'),
+    path('block_time/create', views.CreateBlockedTimeView.as_view(), name='create_blocked_time'),
     path('login/', auth_views.LoginView.as_view(template_name='project/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='project/logged_out.html', next_page='dashboard'), name='logout'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
