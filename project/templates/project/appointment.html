@@ -14,4 +14,8 @@
         </main>
     {% endif %}
 
+    {% if appointment.patient == profile or appointment.dentist == profile %}
+        <a href="{% url 'delete_appointment' pk=appointment.pk %}" class="btn btn-primary">Delete Appointment</a>
+    {% endif %}
+
 {% endblock %}

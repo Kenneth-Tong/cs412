@@ -13,11 +13,11 @@
     {% if user_type == 'dentist' %}
         <p>Specialty: {{dentist.speciality}}</p>
         <p>Bio: {{dentist.bio}}</p>
-        <a href="{% url 'update_profile' pk=profile.pk %}?type=dentist">Update Your Account</a>
+        <a href="{% url 'update_profile' pk=profile.pk %}">Update Your Account</a>
     {% elif user_type == 'patient' %}
         <p>Insurance Provider: {{patient.insurance_provider}}</p>
         <p>Date of Birth: {{patient.date_of_birth}}</p>
-        <a href="{% url 'update_profile' pk=profile.pk %}?type=patient">Update Your Account</a>
+        <a href="{% url 'update_profile' pk=profile.pk %}">Update Your Account</a>
     {% endif %}
 
 {% endblock %}

@@ -46,61 +46,16 @@ class DentistCreateAppointmentForm(forms.ModelForm):
         exclude = ['dentist']  # Dentist is set in the view
 
 class PatientUpdateAppointmentForm(forms.ModelForm):
-    start = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={
-            'type': 'datetime-local',
-            'class': 'styled-datetime',
-        }),
-        input_formats=['%Y-%m-%dT%H:%M']
-    )
-    end = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={
-            'type': 'datetime-local',
-            'class': 'styled-datetime',
-        }),
-        input_formats=['%Y-%m-%dT%H:%M']
-    )
-    input_formats=['%Y-%m-%dT%H:%M']
     class Meta:
         model = Appointment
         fields = ['start', 'end', 'notes'] # Patients can only edit notes and start time
 
 class DentistUpdateAppointmentForm(forms.ModelForm):
-    start = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={
-            'type': 'datetime-local',
-            'class': 'styled-datetime',
-        }),
-        input_formats=['%Y-%m-%dT%H:%M']
-    )
-    end = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={
-            'type': 'datetime-local',
-            'class': 'styled-datetime',
-        }),
-        input_formats=['%Y-%m-%dT%H:%M']
-    )
-    input_formats=['%Y-%m-%dT%H:%M']
     class Meta:
         model = Appointment
         exclude = ['patient'] # Dentists can edit everything but patient, they can hand off patients if needed
 
 class UpdateTreatmentForm(forms.ModelForm): # Only dentists can access
-    start = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={
-            'type': 'datetime-local',
-            'class': 'styled-datetime',
-        }),
-        input_formats=['%Y-%m-%dT%H:%M']
-    )
-    end = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={
-            'type': 'datetime-local',
-            'class': 'styled-datetime',
-        }),
-        input_formats=['%Y-%m-%dT%H:%M']
-    )
-    input_formats=['%Y-%m-%dT%H:%M']
     class Meta:
         model = Treatment
         exclude = ['appointment']
@@ -146,21 +101,6 @@ class CreateBlockedTimesForm(forms.ModelForm):
         exclude = ['dentist']
 
 class UpdateBlockedTimesForm(forms.ModelForm):
-    start = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={
-            'type': 'datetime-local',
-            'class': 'styled-datetime',
-        }),
-        input_formats=['%Y-%m-%dT%H:%M']
-    )
-    end = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={
-            'type': 'datetime-local',
-            'class': 'styled-datetime',
-        }),
-        input_formats=['%Y-%m-%dT%H:%M']
-    )
-    input_formats=['%Y-%m-%dT%H:%M']
     class Meta:
         model = BlockedTime
         exclude = ['dentist'] # Dentists can change their own times/reason

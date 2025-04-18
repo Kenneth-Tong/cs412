@@ -3,7 +3,7 @@
 {% block content %}
     <h2>Treatment History Details</h2>
 
-    <p>Dentist: Dr. {{treatment.appointment.dentist.profile.first_name}} {{treatment.appointment.dentist.profile.last_name}}</p>
+    <p>Dentist: Dr. {{treatment.appointment.dentist.first_name}} {{treatment.appointment.dentist.last_name}}</p>
     <p>Start Time: {{treatment}}</p>
     <p>End Time: {{treatment.appointment.end}}</p>
     {% if treatment.appointment.notes %}
@@ -19,7 +19,8 @@
     <p>Tooth Worked: {{treatment.tooth_number}}</p>
     <p>Dentist Notes: {{treatment.dentist_notes}}</p>
     
-    {% if user_type == 'dentist' and treatment.appointment.dentist.profile == profile %}
+    {% if user_type == 'dentist' and treatment.appointment.dentist == profile %}
         <a href="{% url 'update_treatment' treatment.pk %}" class="btn btn-primary">Update Treatment</a>
+        <a href="{% url 'delete_treatment' treatment.pk %}" class="btn btn-primary">Delete Treatment</a>
     {% endif %}
 {% endblock %}

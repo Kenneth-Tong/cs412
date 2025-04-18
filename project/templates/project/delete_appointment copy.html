@@ -1,0 +1,26 @@
+<!-- project/templates/project/delete_appointment.html -->
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<h3>Are you sure you want to delete this appointment?</h3>
+
+<p>Dentist: Dr. {{appointment.dentist.first_name}} {{appointment.dentist.last_name}}</p>
+<p>Patient: {{appointment.patient.first_name}} {{appointment.patient.last_name}}</p>
+<p>Start Time: {{appointment.start}}</p>
+<p>End Time: {{appointment.end}}</p>
+{% if appointment.notes %}
+    <p>Notes: {{appointment.notes}}</p>
+{% else %}
+    <p>notes: No notes yet.</p>
+{% endif %}
+
+<form action="{% url 'delete_appointment' pk=appointment.pk %}" method="post">
+    {% csrf_token %}
+    <input type='submit' value="Delete">
+</form>
+
+<form action="{% url 'view_appointment' pk=appointment.pk %}" method='GET' >
+    <input type='submit' value="Cancel">
+</form>
+{% endblock %}

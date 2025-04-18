@@ -15,7 +15,7 @@
             {% if request.user.is_authenticated %} <!-- URLs for users who are  logged in -->
                 {% if user_type == 'dentist' %}
                     <a href="{% url 'all_appointments' %}" class="btn btn-primary">Show All Appointments</a> |
-                    <a href="{% url 'blocked_time_list' %}" class="btn btn-primary">Your Blocked Times Dashboard</a> |
+                    <a href="{% url 'blocked_time_list' %}" class="btn btn-primary">All Office Blocked Times Dashboard</a> |
                 {% endif %}
                 <a href="{% url 'make_appointment' %}">Make Appointment</a> |
                 <a href="{% url 'view_profile' pk=profile.pk %}">My Profile</a> |

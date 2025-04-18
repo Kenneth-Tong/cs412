@@ -2,7 +2,7 @@
 {% extends 'project/base.html' %}
 
 {% block content %}
-<h1>Update {{treatment.appointment.patient.profile.first_name}} {{treatment.appointment.patient.profile.last_name}}'s Treatment</h1>
+<h1>Update {{treatment.appointment.patient.first_name}} {{treatment.appointment.patient.last_name}}'s Treatment</h1>
 
 <!-- display the HTML form -->
 <form action="{% url 'update_treatment' treatment.pk %}" method="POST">

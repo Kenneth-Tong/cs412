@@ -4,7 +4,8 @@
 # all dentists and detailed view of dentists
 
 from django.forms import ValidationError
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView
+from django.http import HttpResponseRedirect
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Dentist, Appointment, Patient, Treatment, Profile
 from .forms import *
 from django.urls import reverse
@@ -196,6 +197,35 @@ class UpdateAppointment(CheckProfile, CustomLoginMixin, UpdateView):
         return reverse('view_appointment', kwargs={'pk': self.object.pk})
     
 
+class DeleteAppointmentView(CheckProfile, CustomLoginMixin, DeleteView):
+    template_name = "project/delete_appointment.html"
+    model = Appointment
+    context_object_name = 'appointment'
+    
+    def get_success_url(self): # Go to dashboard after deleting an appointment
+        return reverse('dashboard')
+
+    def dispatch(self, request, *args, **kwargs): # Is profile allowed to delete this
+        appointment = self.get_object()
+        user = request.user
+
+        try: # Attempt to get the profile (patient or dentist) associated with the user
+            patient = Patient.objects.get(user=user)
+        except Patient.DoesNotExist:
+            patient = None
+
+        try:
+            dentist = Dentist.objects.get(user=user)
+        except Dentist.DoesNotExist:
+            dentist = None
+
+        # Only allow if the user is the patient or dentist on the appointment
+        if appointment.patient != patient and appointment.dentist != dentist:
+            return HttpResponseRedirect(reverse('dashboard'))
+        
+        return super().dispatch(request, *args, **kwargs)
+
+
 class TreatmentView(CheckProfile, CustomLoginMixin, DetailView):
     model = Treatment
     template_name = 'project/treatment.html'
@@ -219,6 +249,44 @@ class UpdateTreatment(CheckProfile, CustomLoginMixin, UpdateView):
     def get_success_url(self):
         return reverse('view_treatment', kwargs={'pk': self.object.pk})
 
+
+class DeleteTreatmentView(CheckProfile, CustomLoginMixin, DeleteView):
+    template_name = "project/delete_treatment.html"
+    model = Treatment
+    context_object_name = 'treatment'
+    
+    def get_success_url(self): # Go to dashboard after deleting an appointment
+        return reverse('dashboard')
+
+    def dispatch(self, request, *args, **kwargs): # Is profile allowed to delete this
+        treatment = self.get_object()
+        user = request.user
+
+        try:
+            patient = Patient.objects.get(user=user)
+        except Patient.DoesNotExist:
+            patient = None
+
+        try:
+            dentist = Dentist.objects.get(user=user)
+        except Dentist.DoesNotExist:
+            dentist = None
+
+        # Only allow if the profile is the patient or dentist on the appointment
+        if treatment.appointment.patient != patient and treatment.appointment.dentist != dentist:
+            return HttpResponseRedirect(reverse('dashboard'))
+        
+        print('before dispatch')
+    
+        return super().dispatch(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        treatment = self.get_object()
+        appointment = treatment.appointment
+        appointment.delete() # Delete the appointment too so it doesn't keep creating treatment histories
+
+        return super().form_valid(form)
+    
 
 class ProfileView(CheckProfile, CustomLoginMixin, DetailView):
     model = Profile
@@ -279,21 +347,26 @@ class UpdateProfile(CheckProfile, CustomLoginMixin, UpdateView):
     template_name = "project/update_profile_form.html"
 
     def get_form_class(self):
-        user_type = self.request.GET.get('type')
-        if user_type == 'dentist':
+        obj = self.get_object()
+        
+        if isinstance(obj, Dentist):
             return UpdateDentistForm
-        return UpdatePatientForm # Default
-
+        elif isinstance(obj, Patient):
+            return UpdatePatientForm
+        
+        raise ValueError("Form type does not match the object being updated.")
+    
     def get_object(self):
-        user = self.request.user # Get the patient/dentist instance using the user's profile
+        user = self.request.user
         if user.is_authenticated:
-            try:
+            is_patient = Patient.objects.filter(user=user).exists()
+            is_dentist = Dentist.objects.filter(user=user).exists()
+
+            if is_dentist:
+                return Dentist.objects.get(user=user)
+            elif is_patient:
                 return Patient.objects.get(user=user)
-            except Patient.DoesNotExist:
-                try:
-                    return Dentist.objects.get(user=user)
-                except Dentist.DoesNotExist:
-                    return None  # Handle case where no dentists exists for this user
+            
         return None
 
     def form_valid(self, form):
@@ -348,3 +421,26 @@ class UpdateBLockedTimeView(CheckProfile, CustomLoginMixin, UpdateView):
     def get_success_url(self):
         return reverse('blocked_time_view', kwargs={'pk': self.object.pk})
     
+
+class DeleteBlockedTimeView(CheckProfile, CustomLoginMixin, DeleteView):
+    template_name = "project/delete_blocked_time.html"
+    model = BlockedTime
+    context_object_name = 'blocked_time'
+    
+    def get_success_url(self): # Go to dashboard after deleting an appointment
+        return reverse('blocked_time_list')
+
+    def dispatch(self, request, *args, **kwargs): # Is profile allowed to delete this
+        blocked_time = self.get_object()
+        user = request.user
+
+        try:
+            dentist = Dentist.objects.get(user=user)
+        except Dentist.DoesNotExist:
+            dentist = None
+
+        # Only allow if the user is the dentist on the blocked_time
+        if blocked_time.dentist != dentist:
+            return HttpResponseRedirect(reverse('dashboard'))
+        
+        return super().dispatch(request, *args, **kwargs)
