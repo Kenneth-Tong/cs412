@@ -61,6 +61,13 @@ class UpdateTreatmentForm(forms.ModelForm): # Only dentists can access
         exclude = ['appointment']
 
 class CreatePatientForm(forms.ModelForm):
+    date_of_birth = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={
+            'type': 'datetime-local',
+            'class': 'styled-datetime',
+        }),
+        input_formats=['%Y-%m-%dT%H:%M']
+    )
     class Meta:
         model = Patient
         exclude = ['user']  # Set the user myself
