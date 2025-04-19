@@ -17,6 +17,7 @@ class CustomLoginMixin(LoginRequiredMixin): # Redirect to a login
     def get_login_url(self):
         return reverse('login')
 
+
 class CheckProfile(): # Returning if the user if logged in is a patient or dentist for different options for templates
     def get_context_data(self, **kwargs): # Add variable to context for base.html to get back to profile
         context = super().get_context_data(**kwargs)
@@ -40,6 +41,7 @@ class CheckProfile(): # Returning if the user if logged in is a patient or denti
             context['profile'] = None
             context['user_type'] = 'None'
         return context
+
 
 class FrontPageView(CheckProfile, TemplateView):
     template_name = 'project/front_page.html'
@@ -83,18 +85,37 @@ class FrontPageView(CheckProfile, TemplateView):
         context['past_procedures'] = sorted(context['past_procedures'], key=lambda a: a.appointment.start) # Treatment needs to access appointment for start time
         return context
 
+
 class AboutPageView(CheckProfile, TemplateView):
     template_name = 'project/about.html'
+
 
 class ShowAllDentistsView(CheckProfile, ListView):
     model = Dentist
     template_name = 'project/show_all_dentists.html'
     context_object_name = 'dentists'
 
+    def get_queryset(self): # Filter dentists based on selected specialty.
+        queryset = super().get_queryset()
+        speciality = self.request.GET.get('speciality')
+
+        if speciality:
+            queryset = queryset.filter(speciality__icontains=speciality)
+
+        return queryset
+
+    def get_context_data(self, **kwargs): # Add available specialities and selected value to context.
+        context = super().get_context_data(**kwargs)
+        context['specialities'] = Dentist.objects.values_list('speciality', flat=True).distinct() # Dropdown
+        context['selected_speciality'] = self.request.GET.get('speciality', '')
+        return context
+    
+
 class ShowDentistPageView(CheckProfile, DetailView):
     model = Dentist
     template_name = 'project/show_dentist.html'
     context_object_name = 'dentist'
+
 
 class ShowAllAppointmentsView(CheckProfile, CustomLoginMixin, ListView):
     model = Appointment

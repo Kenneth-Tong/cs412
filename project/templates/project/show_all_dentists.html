@@ -1,28 +1,37 @@
-<!-- templates/show_all_dentists.html -->
-
 {% extends 'project/base.html' %}
-    <h1>Meet Our Dentists</h1>
 
-    {% block content %}
-    <main class="grid-container">
-        {% for dentist in dentists %}
-        <article>
-            <div> <!-- Access the person in the for looping through the list of Profiles -->
-                <h2>Dr. {{dentist.first_name}} {{dentist.last_name}}</h2>
-            </div>
+{% block content %}
+<h1>Meet Our Dentists</h1>
 
-            {% if dentist.image_file %} <!-- If there is an image assocaited with the Dentist, display it as a clickable link -->
-                <a href="{% url 'show_dentist' pk=dentist.pk %}">
-                <img src="{{dentist.image_file.url}}" alt="{{dentist.image_file.url}}"
-                width="200">
-            </a>
-            {% endif %}
-
-            <div>
-                <h3>Speciality: {{dentist.speciality}}</h3>
-            </div>
-        </article>
-
+<!-- Filter Form -->
+<form method="get" action="{% url 'show_all_dentists' %}">
+    <label for="speciality">Filter by Specialty:</label>
+    <select name="speciality" id="speciality">
+        <option value="">All</option>
+        {% for spec in specialities %}
+            <option value="{{ spec }}" {% if selected_speciality == spec %}selected{% endif %}>{{ spec }}</option>
         {% endfor %}
-    </main>
+    </select>
+    <button type="submit">Search</button>
+</form>
+
+<main class="grid-container">
+    {% for dentist in dentists %}
+    <article>
+        <div>
+            <h2>Dr. {{ dentist.first_name }} {{ dentist.last_name }}</h2>
+        </div>
+
+        {% if dentist.image_file %}
+            <a href="{% url 'show_dentist' pk=dentist.pk %}">
+                <img src="{{ dentist.image_file.url }}" alt="Dr. {{ dentist.first_name }}" width="200">
+            </a>
+        {% endif %}
+
+        <div>
+            <h3>Speciality: {{ dentist.speciality }}</h3>
+        </div>
+    </article>
+    {% endfor %}
+</main>
 {% endblock %}
