@@ -17,10 +17,10 @@
 <main class="grid-container">
     {% for dentist in dentists %}
     <article>
-        <h2>Dr. {{ dentist.first_name }} {{ dentist.last_name }}</h2>
+        <h2 style="text-align: center;">Dr. {{ dentist.first_name }} {{ dentist.last_name }}</h2>
         {% if dentist.image_file %}
             <a href="{% url 'show_dentist' pk=dentist.pk %}">
-                <img src="{{ dentist.image_file.url }}" alt="Dr. {{ dentist.first_name }}" width="200">
+                <img src="{{ dentist.image_file.url }}" alt="Dr. {{ dentist.first_name }}" width="300" class="center">
             </a>
         {% endif %}
         <p><strong>Speciality:</strong> {{ dentist.speciality }}</p>

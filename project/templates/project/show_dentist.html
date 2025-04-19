@@ -3,10 +3,10 @@
 {% block content %}
 <main class="grid-container">
     <article>
-        <h2>Dr. {{ dentist.first_name }} {{ dentist.last_name }}</h2>
+        <h2 style="text-align: center;">Dr. {{ dentist.first_name }} {{ dentist.last_name }}</h2>
 
         {% if dentist.image_file %}
-            <img src="{{ dentist.image_file.url }}" alt="Dr. {{ dentist.first_name }}" width="400">
+            <img src="{{ dentist.image_file.url }}" alt="Dr. {{ dentist.first_name }}" width="300" class="center">
         {% endif %}
 
         <p><strong>Speciality:</strong> {{ dentist.speciality }}</p>
