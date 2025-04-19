@@ -1,20 +1,13 @@
-<!-- project/update_appointment.html -->
+<!-- Update Blocked Time Form -->
 {% extends 'project/base.html' %}
-
 {% block content %}
-<h2>Update {{appointment.patient.first_name}} {{appointment.patient.last_name}}'s Appointment</h2>
-
-<!-- display the HTML form -->
-<form action="{% url 'update_appointment' appointment.pk %}" method="POST">
+<h2>Update Blocked Time</h2>
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <table>
-        {{form.as_table}}
-    </table>
-
-    <input type="submit" name="submit" value="Submit">
+    <table>{{ form.as_table }}</table>
+    <input type="submit" value="Update Blocked Time" class="btn">
 </form>
-<form action="{% url 'view_appointment' appointment.pk %}" method="GET">
-    <input type="submit" value="Cancel">
+<form action="{% url 'blocked_time_list' %}" method="GET">
+    <input type="submit" value="Cancel" class="btn">
 </form>
-
 {% endblock %}

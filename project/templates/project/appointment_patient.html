@@ -1,12 +1,12 @@
-<p>Dentist: Dr. {{appointment.dentist.first_name}} {{appointment.dentist.last_name}}</p>
-<p>Start Time: {{appointment.start}}</p>
-<p>End Time: {{appointment.end}}</p>
+<p><strong>Dentist:</strong> Dr. {{ appointment.dentist.first_name }} {{ appointment.dentist.last_name }}</p>
+<p><strong>Start Time:</strong> {{ appointment.start }}</p>
+<p><strong>End Time:</strong> {{ appointment.end }}</p>
 {% if appointment.notes %}
-    <p>Your Notes: {{appointment.notes}}</p>
+    <p><strong>Your Notes:</strong> {{ appointment.notes }}</p>
 {% else %}
-    <p>Your notes: No notes yet.</p>
+    <p><strong>Your Notes:</strong> No notes yet.</p>
 {% endif %}
 
 {% if appointment.patient == profile %}
-    <a href="{% url 'update_appointment' pk=appointment.pk %}" class="btn btn-primary">Update Appointment</a>
+    <a href="{% url 'update_appointment' pk=appointment.pk %}" class="btn">Update Appointment</a>
 {% endif %}

@@ -1,24 +1,15 @@
-<!-- project/templates/project/delete_blocked_time.html -->
+<!-- delete_blocked_time.html -->
 {% extends 'project/base.html' %}
-
 {% block content %}
-
-<h3>Are you sure you want to delete this blocked off time?</h3>
-
-<p>Start Time: {{blocked_time.start}}</p>
-<p>End Time: {{blocked_time.end}}</p>
-{% if blocked_time.reason %}
-    <p>Reason: {{blocked_time.reason}}</p>
-{% else %}
-    <p>Reason: No reason provided.</p>
-{% endif %}
-
+<h3>Are you sure you want to delete this blocked time?</h3>
+<p><strong>Start Time:</strong> {{ blocked_time.start }}</p>
+<p><strong>End Time:</strong> {{ blocked_time.end }}</p>
+{% if blocked_time.reason %}<p><strong>Reason:</strong> {{ blocked_time.reason }}</p>{% endif %}
 <form action="{% url 'delete_blocked_time' pk=blocked_time.pk %}" method="post">
     {% csrf_token %}
-    <input type='submit' value="Delete">
+    <input type="submit" value="Delete">
 </form>
-
-<form action="{% url 'blocked_time_view' pk=blocked_time.pk %}" method='GET' >
-    <input type='submit' value="Cancel">
+<form action="{% url 'blocked_time_view' pk=blocked_time.pk %}" method="GET">
+    <input type="submit" value="Cancel">
 </form>
 {% endblock %}

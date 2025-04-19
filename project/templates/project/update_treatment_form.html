@@ -1,20 +1,13 @@
-<!-- project/update_appointment.html -->
+<!-- Update Treatment Form -->
 {% extends 'project/base.html' %}
-
 {% block content %}
-<h1>Update {{treatment.appointment.patient.first_name}} {{treatment.appointment.patient.last_name}}'s Treatment</h1>
-
-<!-- display the HTML form -->
+<h1>Update {{ treatment.appointment.patient.first_name }} {{ treatment.appointment.patient.last_name }}'s Treatment</h1>
 <form action="{% url 'update_treatment' treatment.pk %}" method="POST">
     {% csrf_token %}
-    <table>
-        {{form.as_table}}
-    </table>
-
-    <input type="submit" name="submit" value="Submit">
+    <table>{{ form.as_table }}</table>
+    <input type="submit" name="submit" value="Submit" class="btn">
 </form>
 <form action="{% url 'view_treatment' treatment.pk %}" method="GET">
-    <input type="submit" value="Cancel">
+    <input type="submit" value="Cancel" class="btn">
 </form>
-
 {% endblock %}

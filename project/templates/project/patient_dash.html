@@ -1,23 +1,20 @@
+<!-- patient_dash.html -->
 <h2>Your Appointments</h2>
 {% if new_appointments %}
     {% for appointment in new_appointments %}
-        <p>Dr. {{appointment.dentist.first_name}} {{appointment.dentist.last_name}} at {{appointment.start}}</p>
-        <a href="{% url 'view_appointment' pk=appointment.pk %}" class="btn btn-primary">View Appointment</a>
+        <p><strong>Dr. {{ appointment.dentist.first_name }} {{ appointment.dentist.last_name }}</strong> at {{ appointment.start }}</p>
+        <a href="{% url 'view_appointment' pk=appointment.pk %}" class="btn">View Appointment</a>
     {% endfor %}
-{% else %} <!-- If appointment is empty list, then display below -->
-    <p>You have no upcoming appointments.</p> 
+{% else %}
+    <p>You have no upcoming appointments.</p>
 {% endif %}
-
 <hr>
-
 <h2>Treatments You Received</h2>
 {% if past_procedures %}
     {% for treatment in past_procedures %}
-        <p>
-            Dentist: {{treatment.appointment.dentist}} <br>
-            Date: {{treatment.appointment.start}} <br>
-        </p>
-        <a href="{% url 'view_treatment' pk=treatment.pk %}" class="btn btn-primary">View Treatment</a>
+        <p><strong>Dentist:</strong> {{ treatment.appointment.dentist }}<br>
+        <strong>Date:</strong> {{ treatment.appointment.start }}</p>
+        <a href="{% url 'view_treatment' pk=treatment.pk %}" class="btn">View Treatment</a>
     {% endfor %}
 {% else %}
     <p>No previous treatment history.</p>

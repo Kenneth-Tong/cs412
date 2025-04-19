@@ -1,3 +1,4 @@
+<!-- appointment.html -->
 {% extends 'project/base.html' %}
 
 {% block content %}
@@ -7,7 +8,6 @@
         <main>
             {% include 'project/appointment_patient.html' %}
         </main>
-
     {% elif user_type == 'dentist' %}
         <main>
             {% include 'project/appointment_dentist.html' %}
@@ -15,7 +15,6 @@
     {% endif %}
 
     {% if appointment.patient == profile or appointment.dentist == profile %}
-        <a href="{% url 'delete_appointment' pk=appointment.pk %}" class="btn btn-primary">Delete Appointment</a>
+        <a href="{% url 'delete_appointment' pk=appointment.pk %}" class="btn">Delete Appointment</a>
     {% endif %}
-
 {% endblock %}

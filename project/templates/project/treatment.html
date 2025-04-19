@@ -1,26 +1,20 @@
+<!-- treatment.html -->
 {% extends 'project/base.html' %}
-
 {% block content %}
-    <h2>Treatment History Details</h2>
-
-    <p>Dentist: Dr. {{treatment.appointment.dentist.first_name}} {{treatment.appointment.dentist.last_name}}</p>
-    <p>Start Time: {{treatment}}</p>
-    <p>End Time: {{treatment.appointment.end}}</p>
-    {% if treatment.appointment.notes %}
-        <p>Patient Notes: {{treatment.appointment.notes}}</p>
-    {% else %}
-        <p>Patient notes: No notes yet.</p>
-    {% endif %}
-
-    <hr>
-
-    <h2>Procedure details</h2>
-    <p>Procedure: {{treatment.procedure}}</p>
-    <p>Tooth Worked: {{treatment.tooth_number}}</p>
-    <p>Dentist Notes: {{treatment.dentist_notes}}</p>
-    
-    {% if user_type == 'dentist' and treatment.appointment.dentist == profile %}
-        <a href="{% url 'update_treatment' treatment.pk %}" class="btn btn-primary">Update Treatment</a>
-        <a href="{% url 'delete_treatment' treatment.pk %}" class="btn btn-primary">Delete Treatment</a>
-    {% endif %}
+<h2>Treatment History Details</h2>
+<p><strong>Dentist:</strong> Dr. {{ treatment.appointment.dentist.first_name }} {{ treatment.appointment.dentist.last_name }}</p>
+<p><strong>Start Time:</strong> {{ treatment.appointment.start }}</p>
+<p><strong>End Time:</strong> {{ treatment.appointment.end }}</p>
+{% if treatment.appointment.notes %}
+    <p><strong>Patient Notes:</strong> {{ treatment.appointment.notes }}</p>
+{% endif %}
+<hr>
+<h3>Procedure Details</h3>
+<p><strong>Procedure:</strong> {{ treatment.procedure }}</p>
+<p><strong>Tooth Worked:</strong> {{ treatment.tooth_number }}</p>
+<p><strong>Dentist Notes:</strong> {{ treatment.dentist_notes }}</p>
+{% if user_type == 'dentist' and treatment.appointment.dentist == profile %}
+    <a href="{% url 'update_treatment' treatment.pk %}" class="btn">Update Treatment</a>
+    <a href="{% url 'delete_treatment' treatment.pk %}" class="btn">Delete Treatment</a>
+{% endif %}
 {% endblock %}

@@ -3,7 +3,6 @@
 {% block content %}
 <h1>Meet Our Dentists</h1>
 
-<!-- Filter Form -->
 <form method="get" action="{% url 'show_all_dentists' %}">
     <label for="speciality">Filter by Specialty:</label>
     <select name="speciality" id="speciality">
@@ -12,25 +11,19 @@
             <option value="{{ spec }}" {% if selected_speciality == spec %}selected{% endif %}>{{ spec }}</option>
         {% endfor %}
     </select>
-    <button type="submit">Search</button>
+    <button type="submit" class="btn">Search</button>
 </form>
 
 <main class="grid-container">
     {% for dentist in dentists %}
     <article>
-        <div>
-            <h2>Dr. {{ dentist.first_name }} {{ dentist.last_name }}</h2>
-        </div>
-
+        <h2>Dr. {{ dentist.first_name }} {{ dentist.last_name }}</h2>
         {% if dentist.image_file %}
             <a href="{% url 'show_dentist' pk=dentist.pk %}">
                 <img src="{{ dentist.image_file.url }}" alt="Dr. {{ dentist.first_name }}" width="200">
             </a>
         {% endif %}
-
-        <div>
-            <h3>Speciality: {{ dentist.speciality }}</h3>
-        </div>
+        <p><strong>Speciality:</strong> {{ dentist.speciality }}</p>
     </article>
     {% endfor %}
 </main>

@@ -1,16 +1,10 @@
+<!-- Create Appointment Form -->
 {% extends 'project/base.html' %}
-
 {% block content %}
 <h1>Create an Appointment</h1>
-
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    
-    <table>
-        {{form.as_table}}
-    </table>
-
-    <input type="submit" value="Create Appointment">
+    <table>{{ form.as_table }}</table>
+    <input type="submit" value="Create Appointment" class="btn">
 </form>
-
 {% endblock %}

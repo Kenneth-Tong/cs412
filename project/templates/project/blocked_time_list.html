@@ -1,25 +1,25 @@
+
+<!-- blocked_time_list.html -->
 {% extends 'project/base.html' %}
 
 {% block content %}
     <h2>All Office Blocked Off Times</h2>
-    <a href="{% url 'create_blocked_time' %}" class="btn btn-primary">Add A Blocked Time Slot</a>
+    <a href="{% url 'create_blocked_time' %}" class="btn">Add A Blocked Time Slot</a>
     <hr>
 
     <main class="grid-container">
         {% for blocked_time in blocked_times %}
         <article>
-            <p>Dentist: Dr. {{blocked_time.dentist.first_name}} {{blocked_time.dentist.last_name}}</p>
-            <p>Start Time: {{blocked_time.start}}</p>
-            <p>End Time: {{blocked_time.end}}</p>
+            <p><strong>Dentist:</strong> Dr. {{ blocked_time.dentist.first_name }} {{ blocked_time.dentist.last_name }}</p>
+            <p><strong>Start Time:</strong> {{ blocked_time.start }}</p>
+            <p><strong>End Time:</strong> {{ blocked_time.end }}</p>
             {% if blocked_time.reason %}
-                <p>Your Notes: {{blocked_time.reason}}</p>
+                <p><strong>Your Notes:</strong> {{ blocked_time.reason }}</p>
             {% else %}
-                <p>Your notes: No reason provided.</p>
+                <p><strong>Your Notes:</strong> No reason provided.</p>
             {% endif %}
-        
-            <a href="{% url 'blocked_time_view' pk=blocked_time.pk %}" class="btn btn-primary">View Blocked Time</a>
+            <a href="{% url 'blocked_time_view' pk=blocked_time.pk %}" class="btn">View Blocked Time</a>
         </article>
-
         {% endfor %}
     </main>
 {% endblock %}

@@ -1,24 +1,16 @@
+<!-- Create Profile Form -->
 {% extends 'project/base.html' %}
-
 {% block content %}
 <h1>Create Your Profile</h1>
-
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    
     <h2>User Information</h2>
-    <table>
-        {{user_form.as_table}}
-    </table>
-    
+    <table>{{ user_form.as_table }}</table>
     <h2>Profile Information</h2>
-    <table>
-        {{form.as_table}}
-    </table>
-
-    <input type="submit" value="Create Profile" class="btn btn-primary">
+    <table>{{ form.as_table }}</table>
+    <input type="submit" value="Create Profile" class="btn">
 </form>
 <form action="{% url 'dashboard' %}" method="GET">
-    <input type="submit" value="Cancel">
+    <input type="submit" value="Cancel" class="btn">
 </form>
 {% endblock %}

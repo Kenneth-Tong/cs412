@@ -1,3 +1,4 @@
+<!-- all_appointments.html -->
 {% extends 'project/base.html' %}
 
 {% block content %}
@@ -5,15 +6,19 @@
 
     <h3>Upcoming Patient Appointments</h3>
     {% if new_appointments %}
-        {% for appointment in new_appointments %}
-            <h4>{{appointment.start}}</h4>
-            {% if appointment.dentist == profile %}
-                <p>Your appointment with patient {{appointment.patient.first_name}} {{appointment.patient.last_name}}</p>
-            {% else %}
-                <p>Dr. {{appointment.dentist.last_name}}'s' appointment with {{appointment.patient.first_name}} {{appointment.patient.last_name}}</p>
-            {% endif %}
-            <a href="{% url 'view_appointment' appointment.pk %}">View Appointment</a>
-        {% endfor %}
+        <div class="grid-container">
+            {% for appointment in new_appointments %}
+                <article>
+                    <h4>{{ appointment.start }}</h4>
+                    {% if appointment.dentist == profile %}
+                        <p>Your appointment with patient {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</p>
+                    {% else %}
+                        <p>Dr. {{ appointment.dentist.last_name }}'s appointment with {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</p>
+                    {% endif %}
+                    <a href="{% url 'view_appointment' appointment.pk %}" class="btn">View Appointment</a>
+                </article>
+            {% endfor %}
+        </div>
     {% else %}
         <p>No new appointments available.</p>
     {% endif %}
@@ -22,17 +27,20 @@
 
     <h3>Previous Treatments</h3>
     {% if past_procedures %}
-        {% for treatment in past_procedures %}
-            <h4>{{treatment.appointment.start}}</h4>
-            {% if treatment.appointment.dentist == profile %}
-                <p>Your treatment with patient {{treatment.appointment.patient.first_name}} {{treatment.appointment.patient.last_name}}</p>
-            {% else %}
-                <p>Dr. {{treatment.appointment.dentist.last_name}}'s' appointment with {{treatment.appointment.patient.first_name}} {{treatment.appointment.patient.last_name}}</p>
-            {% endif %}
-            <a href="{% url 'view_treatment' treatment.pk %}">View Treatment</a>
-        {% endfor %}
+        <div class="grid-container">
+            {% for treatment in past_procedures %}
+                <article>
+                    <h4>{{ treatment.appointment.start }}</h4>
+                    {% if treatment.appointment.dentist == profile %}
+                        <p>Your treatment with patient {{ treatment.appointment.patient.first_name }} {{ treatment.appointment.patient.last_name }}</p>
+                    {% else %}
+                        <p>Dr. {{ treatment.appointment.dentist.last_name }}'s appointment with {{ treatment.appointment.patient.first_name }} {{ treatment.appointment.patient.last_name }}</p>
+                    {% endif %}
+                    <a href="{% url 'view_treatment' treatment.pk %}" class="btn">View Treatment</a>
+                </article>
+            {% endfor %}
+        </div>
     {% else %}
-        <p>No new appointments available.</p>
+        <p>No past treatments available.</p>
     {% endif %}
-
 {% endblock %}

@@ -1,38 +1,33 @@
+<!-- dentist_dash.html -->
 <h2>Your Upcoming Patient Appointments</h2>
 {% if new_appointments %}
     {% for appointment in appointments %}
-        <p>{{appointment.patient.first_name}} {{appointment.patient.last_name}} at {{appointment.start}}</p>
-        <a href="{% url 'view_appointment' pk=appointment.pk %}" class="btn btn-primary">View Appointment</a>
+        <p><strong>{{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</strong> at {{ appointment.start }}</p>
+        <a href="{% url 'view_appointment' pk=appointment.pk %}" class="btn">View Appointment</a>
     {% endfor %}
-{% else %} <!-- If appointment is empty list, then display below -->
-    <p>You have no scheduled appointments.</p> 
+{% else %}
+    <p>You have no scheduled appointments.</p>
 {% endif %}
-
 <hr>
 
 <h2>Your Pending Treatment Updates</h2>
 {% if need_updates %}
     {% for treatment in need_updates %}
-        <p>
-            Patient: {{treatment.appointment.patient.first_name}} {{treatment.appointment.patient.last_name}} <br>
-            Date: {{treatment.appointment.start}}<br>
-        </p>
-        <a href="{% url 'view_treatment' pk=treatment.pk %}" class="btn btn-primary">View Treatment</a>
+        <p><strong>Patient:</strong> {{ treatment.appointment.patient.first_name }} {{ treatment.appointment.patient.last_name }}<br>
+        <strong>Date:</strong> {{ treatment.appointment.start }}</p>
+        <a href="{% url 'view_treatment' pk=treatment.pk %}" class="btn">View Treatment</a>
     {% endfor %}
 {% else %}
     <p>All treatment histories updated.</p>
 {% endif %}
-
 <hr>
 
 <h2>Completed Treatment Records</h2>
 {% if past_procedures %}
     {% for treatment in past_procedures %}
-        <p>
-            Patient: {{treatment.appointment.patient.first_name}} {{treatment.appointment.patient.last_name}} <br>
-            Date: {{treatment.appointment.start}}<br>
-        </p>
-        <a href="{% url 'view_treatment' pk=treatment.pk %}" class="btn btn-primary">View Treatment</a>
+        <p><strong>Patient:</strong> {{ treatment.appointment.patient.first_name }} {{ treatment.appointment.patient.last_name }}<br>
+        <strong>Date:</strong> {{ treatment.appointment.start }}</p>
+        <a href="{% url 'view_treatment' pk=treatment.pk %}" class="btn">View Treatment</a>
     {% endfor %}
 {% else %}
     <p>No previous procedures performed.</p>

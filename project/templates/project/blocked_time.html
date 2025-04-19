@@ -3,18 +3,18 @@
 {% block content %}
     <h2>Blocked Time Details</h2>
 
-    <p>Dentist: Dr. {{blocked_time.dentist.first_name}} {{blocked_time.dentist.last_name}}</p>
-    <p>Start Time: {{blocked_time.start}}</p>
-    <p>End Time: {{blocked_time.end}}</p>
+    <p><strong>Dentist:</strong> Dr. {{ blocked_time.dentist.first_name }} {{ blocked_time.dentist.last_name }}</p>
+    <p><strong>Start Time:</strong> {{ blocked_time.start }}</p>
+    <p><strong>End Time:</strong> {{ blocked_time.end }}</p>
+
     {% if blocked_time.reason %}
-        <p>Your Notes: {{blocked_time.reason}}</p>
+        <p><strong>Your Notes:</strong> {{ blocked_time.reason }}</p>
     {% else %}
-        <p>Your notes: No reason provided.</p>
+        <p><strong>Your Notes:</strong> No reason provided.</p>
     {% endif %}
 
     {% if blocked_time.dentist == profile %}
-        <a href="{% url 'update_blocked_time' pk=blocked_time.pk %}" class="btn btn-primary">Update Blocked Time</a>
-        <a href="{% url 'delete_blocked_time' pk=blocked_time.pk %}" class="btn btn-primary">Delete Blocked Time Slot</a>
+        <a href="{% url 'update_blocked_time' pk=blocked_time.pk %}" class="btn">Update Blocked Time</a>
+        <a href="{% url 'delete_blocked_time' pk=blocked_time.pk %}" class="btn">Delete Blocked Time Slot</a>
     {% endif %}
-
 {% endblock %}

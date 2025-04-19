@@ -1,47 +1,40 @@
-<!-- project/templates/project/base.html -->
-
+<!-- base.html -->
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>ToothSync</title>
-    <link rel="stylesheet" href="{% static 'styles_mini_fb.css' %}">
+    <link rel="stylesheet" href="{% static 'styles_project.css' %}">
 </head>
 <body>
     <header>
         <h1>ToothSync</h1>
         <nav>
-            <a href="{% url 'dashboard' %}">Home</a> |
-            <a href="{% url 'show_all_dentists' %}">Dentists</a> |
-            <a href="{% url 'about' %}">About</a> |
-            {% if request.user.is_authenticated %} <!-- URLs for users who are  logged in -->
+            <a href="{% url 'dashboard' %}">Home</a>
+            <a href="{% url 'show_all_dentists' %}">Dentists</a>
+            <a href="{% url 'about' %}">About</a>
+            {% if request.user.is_authenticated %}
                 {% if user_type == 'dentist' %}
-                    <a href="{% url 'all_appointments' %}" class="btn btn-primary">Show All Appointments</a> |
-                    <a href="{% url 'blocked_time_list' %}" class="btn btn-primary">All Office Blocked Times Dashboard</a> |
+                    <a href="{% url 'all_appointments' %}" class="btn">All Appointments</a>
+                    <a href="{% url 'blocked_time_list' %}" class="btn">Blocked Times</a>
                 {% endif %}
-                <a href="{% url 'make_appointment' %}">Make Appointment</a> |
-                <a href="{% url 'view_profile' pk=profile.pk %}">My Profile</a> |
-                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                <a href="{% url 'make_appointment' %}">Make Appointment</a>
+                <a href="{% url 'view_profile' pk=profile.pk %}">My Profile</a>
+                <form method="post" action="{% url 'logout' %}" style="display:inline;">
                     {% csrf_token %}
-                    <button type="submit" style="
-                        background: none;
-                        border: none;
-                        color: inherit;
-                        cursor: pointer;
-                        padding: 0;
-                        font: inherit;
-                        text-decoration: none;">Logout</button>
+                    <button type="submit">Logout</button>
                 </form>
-            {% else %} <!-- URLs for users who are not logged in -->
-                <a href="{% url 'login' %}">Login</a> |
-                <a href="{% url 'make_profile' %}?type=patient">Create Patient Account</a> |
-                <a href="{% url 'make_profile' %}?type=dentist">Create Dentist Account</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'make_profile' %}?type=patient">Create Patient</a>
+                <a href="{% url 'make_profile' %}?type=dentist">Create Dentist</a>
             {% endif %}
         </nav>
         <hr>
     </header>
-
     <main>
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </main>
 </body>
 </html>
