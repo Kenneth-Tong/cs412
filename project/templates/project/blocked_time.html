@@ -1,3 +1,5 @@
+<!-- project/templates/project/blocked_time.html -->
+
 {% extends 'project/base.html' %}
 
 {% block content %}
@@ -17,4 +19,5 @@
         <a href="{% url 'update_blocked_time' pk=blocked_time.pk %}" class="btn">Update Blocked Time</a>
         <a href="{% url 'delete_blocked_time' pk=blocked_time.pk %}" class="btn">Delete Blocked Time Slot</a>
     {% endif %}
+    <a href="{% url 'blocked_time_list' %}" class="btn">Back to List</a>
 {% endblock %}

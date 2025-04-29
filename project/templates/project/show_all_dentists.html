@@ -1,3 +1,5 @@
+<!-- project/templates/project/patient_dash.html -->
+
 {% extends 'project/base.html' %}
 
 {% block content %}
@@ -8,9 +10,13 @@
     <select name="speciality" id="speciality">
         <option value="">All</option>
         {% for spec in specialities %}
-            <option value="{{ spec }}" {% if selected_speciality == spec %}selected{% endif %}>{{ spec }}</option>
+            <option value="{{ spec }}" {% if selected_speciality == spec %} selected {% endif %}>{{ spec }}</option>
         {% endfor %}
     </select>
+
+    <label for="name">Search by Last Name:</label>
+    <input type="text" name="name" id="name" placeholder="Dr. Tong">
+
     <button type="submit" class="btn">Search</button>
 </form>
 

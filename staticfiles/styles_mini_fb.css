@@ -1,0 +1,38 @@
+body {
+    background-color: rgb(144, 224, 239);
+}
+
+title {
+    color:rgb(0, 0, 76)
+}
+
+td {
+    text-align: center;
+}
+
+h1 {
+    color: green;
+}
+
+h2 {
+    color: rgb(0, 119, 182);
+}
+
+p {
+    font-weight: bold;
+    color: rgb(3, 4, 94);
+}
+
+table {
+    border: 1px solid;
+    width: 100%;
+}
+
+th, td {
+    width: 50%;
+    border: 1px solid;
+}
+
+.invisible {
+    border: 0px solid;
+}

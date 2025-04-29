@@ -1,4 +1,5 @@
-<!-- login.html -->
+<!-- project/templates/project/login.html -->
+
 {% extends 'project/base.html' %}
 {% block content %}
 <h1>Login</h1>
@@ -9,6 +10,7 @@
     <input type="submit" value="Login">
 </form>
 <hr>
-<p>Don't have an account? <a href="{% url 'make_profile' %}?type=patient">Register Patient Account</a>
-<p>Don't have an account? <a href="{% url 'make_profile' %}?type=dentist">Register Dentist Account</a></p>
+<p>Don't have an account?</p>
+<a href="{% url 'make_profile' %}?type=patient" class="btn">Register Patient Account</a> 
+<a href="{% url 'make_profile' %}?type=dentist" class="btn">Register Dentist Account</a> 
 {% endblock %}

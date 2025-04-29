@@ -95,12 +95,16 @@ class ShowAllDentistsView(CheckProfile, ListView):
     template_name = 'project/show_all_dentists.html'
     context_object_name = 'dentists'
 
-    def get_queryset(self): # Filter dentists based on selected specialty.
+    def get_queryset(self): # Filter dentists based on selected specialty (if the user chooses to use the search)
         queryset = super().get_queryset()
         speciality = self.request.GET.get('speciality')
+        name_query = self.request.GET.get('name')
 
-        if speciality:
-            queryset = queryset.filter(speciality__icontains=speciality)
+        if speciality: # If the user did search by speciality, will take that from the html form and return it here
+            queryset = queryset.filter(speciality__icontains=speciality) # Taken from drop down
+
+        if name_query:
+            queryset = queryset.filter(first_name__icontains=name_query) | queryset.filter(last_name__icontains=name_query) # Search by last or first name
 
         return queryset
 
@@ -337,7 +341,7 @@ class CreateProfileView(CreateView):
     template_name = "project/create_profile_form.html"
     
     def get_form_class(self):
-        user_type = self.request.GET.get('type')
+        user_type = self.request.GET.get('type') # Because its on the same page, tag the link to get the form needed
         if user_type == 'patient':
             return CreatePatientForm
         elif user_type == 'dentist':
@@ -367,14 +371,13 @@ class CreateProfileView(CreateView):
 class UpdateProfile(CheckProfile, CustomLoginMixin, UpdateView):
     template_name = "project/update_profile_form.html"
 
-    def get_form_class(self):
+    def get_form_class(self): # Determine what profile is accessing this
         obj = self.get_object()
         
         if isinstance(obj, Dentist):
             return UpdateDentistForm
         elif isinstance(obj, Patient):
             return UpdatePatientForm
-        
         raise ValueError("Form type does not match the object being updated.")
     
     def get_object(self):

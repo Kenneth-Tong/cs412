@@ -24,6 +24,21 @@ nav {
     margin-top: 0.5rem;
 }
 
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.nav-links .btn {
+    text-align: center;
+    min-width: 150px;
+    padding: 0.6rem 1.2rem;
+}
+
 nav a, nav button {
     color: white;
     text-decoration: none;

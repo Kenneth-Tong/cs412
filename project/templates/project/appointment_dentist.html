@@ -1,4 +1,5 @@
-<!-- appointment_dentist.html -->
+<!-- project/templates/project/appointment_dentist.html -->
+ 
 <p><strong>Dentist:</strong> Dr. {{ appointment.dentist.first_name }} {{ appointment.dentist.last_name }}</p>
 <p><strong>Patient:</strong> {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</p>
 <p><strong>Date:</strong> {{ appointment.start }}</p>
@@ -9,18 +10,5 @@
     <p><strong>Patient Notes:</strong> No notes yet.</p>
 {% endif %}
 {% if appointment.dentist == profile %}
-    <a href="{% url 'update_appointment' pk=appointment.pk %}" class="btn">Update Appointment</a>
-{% endif %}
-
-<!-- appointment_patient.html -->
-<p><strong>Dentist:</strong> Dr. {{ appointment.dentist.first_name }} {{ appointment.dentist.last_name }}</p>
-<p><strong>Start Time:</strong> {{ appointment.start }}</p>
-<p><strong>End Time:</strong> {{ appointment.end }}</p>
-{% if appointment.notes %}
-    <p><strong>Your Notes:</strong> {{ appointment.notes }}</p>
-{% else %}
-    <p><strong>Your Notes:</strong> No notes yet.</p>
-{% endif %}
-{% if appointment.patient == profile %}
     <a href="{% url 'update_appointment' pk=appointment.pk %}" class="btn">Update Appointment</a>
 {% endif %}

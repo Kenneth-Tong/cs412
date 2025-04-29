@@ -1,4 +1,5 @@
-<!-- treatment.html -->
+<!-- project/templates/project/treatment.html -->
+
 {% extends 'project/base.html' %}
 {% block content %}
 <h2>Treatment History Details</h2>
@@ -17,4 +18,7 @@
     <a href="{% url 'update_treatment' treatment.pk %}" class="btn">Update Treatment</a>
     <a href="{% url 'delete_treatment' treatment.pk %}" class="btn">Delete Treatment</a>
 {% endif %}
+
+<a href="{% url 'dashboard' %}" class="btn">Back</a>
+
 {% endblock %}
