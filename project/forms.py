@@ -65,7 +65,7 @@ class CreatePatientForm(forms.ModelForm):
         widget=forms.DateTimeInput(attrs={
             'type': 'date',
         }),
-        input_formats=['%Y-%m-%dT%H:%M']
+        input_formats=['%Y-%m-%d']
     )
     class Meta:
         model = Patient

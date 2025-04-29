@@ -33,5 +33,5 @@ urlpatterns = [
     path('treatment/<int:pk>/delete/', views.DeleteTreatmentView.as_view(), name='delete_treatment'),
     path('blocked_time/<int:pk>/delete/', views.DeleteBlockedTimeView.as_view(), name='delete_blocked_time'),
     path('login/', auth_views.LoginView.as_view(template_name='project/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='project/logged_out.html', next_page='dashboard'), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='project/logout.html'), name='logout'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
