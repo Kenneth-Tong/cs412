@@ -8,4 +8,7 @@
     <table>{{ form.as_table }}</table>
     <input type="submit" value="Create Appointment" class="btn">
 </form>
+<form action="{% url 'dashboard' %}" method="GET">
+    <input type="submit" value="Cancel" class="btn">
+</form>
 {% endblock %}
