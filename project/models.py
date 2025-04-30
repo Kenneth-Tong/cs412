@@ -1,7 +1,7 @@
 # File: models.py
 # Author: Kenneth Tong (ktong22@bu.edu), 4/12/2025
 # Description: Models for the patient and interactions for scheduling and dentists
-# 
+
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User

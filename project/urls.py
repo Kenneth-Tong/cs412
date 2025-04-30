@@ -1,7 +1,7 @@
-# # File: urls.py
-# # Author: Kenneth Tong (ktong22@bu.edu), 4/12/2025
-# # Description: Created a way for a browser to access each type of response from the server via
-# # a url which will then be processed by the views.py
+# File: urls.py
+# Author: Kenneth Tong (ktong22@bu.edu), 4/12/2025
+# Description: Created a way for a browser to access each type of response from the server via
+# a url which will then be processed by the views.py
 
 from django.urls import path
 from django.conf import settings
@@ -10,7 +10,6 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-
     path('', views.FrontPageView.as_view(), name='dashboard'),
     path('profile/<int:pk>/', views.ProfileView.as_view(), name='view_profile'),
     path('profile/<int:pk>/update/', views.UpdateProfile.as_view(), name='update_profile'),
