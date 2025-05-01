@@ -13,8 +13,5 @@
             {% include 'project/appointment_dentist.html' %}
         </main>
     {% endif %}
-
-    {% if appointment.patient == profile or appointment.dentist == profile %}
-        <a href="{% url 'delete_appointment' pk=appointment.pk %}" class="btn">Delete Appointment</a>
-    {% endif %}
+    <a href="{% url 'dashboard' %}" class="btn">Back</a>
 {% endblock %}

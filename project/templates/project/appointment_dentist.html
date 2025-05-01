@@ -11,4 +11,5 @@
 {% endif %}
 {% if appointment.dentist == profile %}
     <a href="{% url 'update_appointment' pk=appointment.pk %}" class="btn">Update Appointment</a>
+    <a href="{% url 'delete_appointment' pk=appointment.pk %}" class="btn">Delete Appointment</a>
 {% endif %}

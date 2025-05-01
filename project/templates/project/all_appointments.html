@@ -16,7 +16,7 @@
                     {% else %}
                         <p>Dr. {{ appointment.dentist.last_name }}'s appointment with {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</p>
                     {% endif %}
-                    <a href="{% url 'view_appointment' appointment.pk %}" class="btn">View Appointment</a>
+                    <a href="{% url 'view_appointment' pk=appointment.pk %}" class="btn">View Appointment</a>
                 </article>
             {% endfor %}
         </div>

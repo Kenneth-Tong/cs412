@@ -1,20 +1,24 @@
 <!-- project/templates/project/show_dentist.html -->
-
+ 
 {% extends 'project/base.html' %}
 
 {% block content %}
-<main class="grid-container">
-    <article>
-        <h2 style="text-align: center;">Dr. {{ dentist.first_name }} {{ dentist.last_name }}</h2>
-
+<main style="display: flex; justify-content: center">
+    <article style="display: flex; gap: 2rem; flex-wrap: wrap">
         {% if dentist.image_file %}
-            <img src="{{ dentist.image_file.url }}" alt="Dr. {{ dentist.first_name }}" width="300" class="center">
+        <div style="flex: 1; min-width: 250px;">
+            <img src="{{ dentist.image_file.url }}" alt="Dr. {{ dentist.first_name }}" style="width: 100%; border-radius: 10px;">
+        </div>
         {% endif %}
 
-        <p><strong>Speciality:</strong> {{ dentist.speciality }}</p>
-        <p><strong>Email:</strong> {{ dentist.email }}</p>
-        <p>{{ dentist.bio }}</p>
+        <div style="flex: 2; min-width: 250px;">
+            <h2>Dr. {{ dentist.first_name }} {{ dentist.last_name }}</h2>
+            <p><strong>Specialty:</strong> {{ dentist.speciality }}</p>
+            <p><strong>Email:</strong> {{ dentist.email }}</p>
+            <p style="margin-top: 1rem;">{{ dentist.bio }}</p>
+
+            <a href="{% url 'show_all_dentists' %}" class="btn">Return to Dentists</a>
+        </div>
     </article>
 </main>
-<a href="{% url 'show_all_dentists' %}" class="btn">Return to Dentists</a>
 {% endblock %}

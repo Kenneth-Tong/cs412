@@ -48,18 +48,18 @@
         <tr>
             <td align="center">12:00 PM</td>
             <td align="center">Lunch</td>
+            <td align="center">Available</td>
             <td align="center">Lunch</td>
             <td align="center">Lunch</td>
-            <td align="center">Lunch</td>
-            <td align="center">Lunch</td>
+            <td align="center">Closing</td>
         </tr>
         <tr>
             <td align="center">1:00 PM</td>
             <td align="center">Available</td>
+            <td align="center">Lunch</td>
             <td align="center">Available</td>
             <td align="center">Available</td>
-            <td align="center">Available</td>
-            <td align="center">Available</td>
+            <td align="center"></td>
         </tr>
         <tr>
             <td align="center">2:00 PM</td>
@@ -67,7 +67,7 @@
             <td align="center">Available</td>
             <td align="center">Available</td>
             <td align="center">Available</td>
-            <td align="center">Available</td>
+            <td align="center"></td>
         </tr>
         <tr>
             <td align="center">3:00 PM</td>
@@ -75,7 +75,7 @@
             <td align="center">Available</td>
             <td align="center">Available</td>
             <td align="center">Available</td>
-            <td align="center">Available</td>
+            <td align="center"></td>
         </tr>
         <tr>
             <td align="center">4:00 PM</td>
@@ -83,7 +83,7 @@
             <td align="center">Available</td>
             <td align="center">Available</td>
             <td align="center">Available</td>
-            <td align="center">Available</td>
+            <td align="center"></td>
         </tr>
         <tr>
             <td align="center">5:00 PM</td>
@@ -91,7 +91,7 @@
             <td align="center">Closing</td>
             <td align="center">Closing</td>
             <td align="center">Closing</td>
-            <td align="center">Closing</td>
+            <td align="center"></td>
         </tr>
     </tbody>
 </table>
@@ -102,11 +102,20 @@
 </section>
 
 <section>
+
+{% if request.user.is_authenticated %}
+    <h3>Learn more about your appointments on the dashboard</h3>
+    <a href="{% url 'dashboard' %}" class="btn">Dashboard</a> 
+
+{% else %}
     <h3>For New Users</h3>
     <p>Sign up today and enjoy seamless appointment management, reminder notifications, and access to your dental care history.</p>
     <p><strong>Don't have an account?</strong></p>
     <a href="{% url 'make_profile' %}?type=patient" class="btn">Register Patient Account</a> 
     <a href="{% url 'make_profile' %}?type=dentist" class="btn">Register Dentist Account</a> 
-    </section>
+
+{% endif %}
+</section>
+
 
 {% endblock %}
