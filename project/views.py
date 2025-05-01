@@ -196,6 +196,7 @@ class MakeAppointment(CheckProfile, CustomLoginMixin, CreateView):
 class UpdateAppointment(CheckProfile, CustomLoginMixin, UpdateView):
     model = Appointment
     template_name = "project/update_appointment_form.html"
+    context_object_name = 'appointment'
 
     def get_form_class(self):
         user = self.request.user
